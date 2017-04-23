@@ -97,7 +97,7 @@
                           <div class="form-group">
                               <label class="col-lg-2 col-sm-2 control-label">File Size </label>
                               <div class="col-sm-10">
-                                  <p class="form-control-static">{{crash.crash_size}}byte</p>
+                                  <p class="form-control-static">{{crash.crash_file.size|filesizeformat}}</p>
                               </div>
                           </div>
                           <div class="form-group">
@@ -116,6 +116,12 @@
                               <label class="col-lg-2 col-sm-2 control-label">dup_crash</label>
                               <div class="col-sm-10">
                                   <p class="form-control-static">{{crash.dup_crash}} / <span class="label label-success">View other crashes</span></p>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">is_blacklist</label>
+                              <div class="col-sm-10">
+                                  Check blacklist
                               </div>
                           </div>
                           <div class="form-group">

@@ -21,6 +21,7 @@ def index(request):
 def register(request):
 	if request.method != 'POST':
 		raise Http404
+
 	token = ""
 	if request.POST.has_key('password') == False:
 		raise Http404
@@ -32,6 +33,7 @@ def register(request):
 		raise Http404
 	if request.POST.has_key('target') == False:
 		raise Http404
+		
 	password = request.POST['password']
 	fuzzer_name = request.POST['fuzzer_name']
 	pri_ip = request.POST['pri_ip']
@@ -40,9 +42,10 @@ def register(request):
 
 	authinfo = AuthInformation.objects.get(name="sweetfuzz")
 	serverpass = authinfo.password
-	password = hashlib.sha1("th1s1ss0rt"+password.encode("utf-8")).hexdigest()
+	password = hashlib.sha256("th1s1ss0rt"+password.encode("utf-8")).hexdigest()
 
 
+	print(serverpass, password)
 	if password != serverpass:
 		raise Http404
 
@@ -108,6 +111,8 @@ def crash(request):
 	token = request.POST['token']
 	crashlog = request.POST['crashlog']
 	title = request.POST['title']
+
+
 
 	fuzzer = None
 	try:

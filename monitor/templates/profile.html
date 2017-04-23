@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sweetmon - Dashboard for sweetfuzz</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <!--external css-->
+    <link href="/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+        
+    <!-- Custom styles for this template -->
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+  <section id="container" >
+      <!-- **********************************************************************************************************************************************************
+      TOP BAR CONTENT & NOTIFICATIONS
+      *********************************************************************************************************************************************************** -->
+      <!--header start-->
+      {% include "common/head.html" %} 
+      <!--header end-->
+      
+      <!-- **********************************************************************************************************************************************************
+      MAIN SIDEBAR MENU
+      *********************************************************************************************************************************************************** -->
+      <!--sidebar start-->
+      {% include "common/sidebar.html" %} 
+      <!--sidebar end-->
+      
+      <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+      <!--main content start-->
+      <section id="main-content">
+          <section class="wrapper">
+          	<h3><i class="fa fa-angle-right"></i> Profile</h3>   	
+          	<!-- BASIC FORM ELELEMNTS -->
+          	<div class="row mt">
+
+          		<div class="col-lg-12">
+                  <div class="form-panel"><a href="/monitor/crash/">
+                  <button type="button" class="btn btn-theme1 pull-right">Back to lists</button></a>
+                  	  <h4 class="mb">Information</h4> 
+                  	  <hr>
+                      <form class="form-horizontal style-form" method="post" action="/account/profile/modify">
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">User name</label>
+                              <div class="col-sm-10">
+                                  <p class="form-control-static">{{profile.user}}</p>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">User email</label>
+                              <div class="col-sm-10">
+                                  <p class="form-control-static"><input id="OTU_input" name="telegram_id" type="text" class="form-control" placeholder="" value="{{profile.user.email}}"></p>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">Last Login</label>
+                              <div class="col-sm-10">
+                                  <p class="form-control-static">{{profile.user.last_login}}</p>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">Joined Date</label>
+                              <div class="col-sm-10">
+                                  <p class="form-control-static">{{profile.user.date_joined}}</p>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">telegram id</label>
+                              <div class="col-sm-10">
+                                  <p class="form-control-static">
+                                  <input id="OTU_input" name="telegram_id" type="text" class="form-control" placeholder="" value="{{profile.telegram_id}}">
+
+                                  </p>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">RSA Public Key</label>
+                              <div class="col-sm-10">
+
+                                  <p class="form-control-static"><textarea id="OTU_input" type="text" name="public_key" class="form-control">{{profile.public_key}}</textarea></p>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">Use Telegram alert</label>
+                              <div class="col-sm-10">
+                                {% if profile.use_telegram_alert %}
+                                <input name="use_telegram_alert" type="checkbox" data-toggle="switch" checked=""/>
+                                {% else %}
+                                <input name="use_telegram_alert" type="checkbox" data-toggle="switch"/>
+                                {% endif %}
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">Use Email alert</label>
+                              <div class="col-sm-10">
+                                {% if profile.use_email_alert %}
+                                <input name="use_email_alert" type="checkbox" data-toggle="switch" checked=""/>
+                                {% else %}
+                                <input name="use_email_alert" type="checkbox" data-toggle="switch"/>
+                                {% endif %}
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">Use Encryption</label>
+                              <div class="col-sm-10">
+                                {% if profile.use_encryption %}
+                                <input name="use_encryption" type="checkbox" data-toggle="switch" checked=""/>
+                                {% else %}
+                                <input name="use_encryption" type="checkbox" data-toggle="switch"/>
+                                {% endif %}
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label"></label>
+                              <div class="col-sm-10">
+                                  <button type="submit" class="btn btn-theme02 btn-lg btn-block"><i class="fa fa-check"></i> Apply</button>
+                              </div>
+                          </div>
+
+                      </form>
+                  </div>
+          		</div><!-- col-lg-12-->      	
+          	</div><!-- /row -->
+		</section><! --/wrapper -->
+      </section><!-- /MAIN CONTENT -->
+
+      <!--main content end-->
+  </section>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="/assets/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="/assets/js/jquery.scrollTo.min.js"></script>
+    <script src="/assets/js/jquery.nicescroll.js" type="text/javascript"></script>
+
+  
+
+    <!--script for this page-->
+    <script src="/assets/js/jquery-ui-1.9.2.custom.min.js"></script>
+
+  <!--custom switch-->
+  <script src="/assets/js/bootstrap-switch.js"></script>
+  
+  <!--custom tagsinput-->
+  <script src="/assets/js/jquery.tagsinput.js"></script>
+  
+  <!--custom checkbox & radio-->
+  
+
+  
+  <script type="text/javascript" src="/assets/js/bootstrap-inputmask/bootstrap-inputmask.min.js"></script>
+  
+  
+  <script src="/assets/js/form-component.js"></script>    
+    
+
+
+  </body>
+</html>
