@@ -52,15 +52,11 @@
                               <thead>
                               <tr>
                                   <th> IDX</th>
-                                  <th> <i class="fa fa-crosshairs" aria-hidden="true"> Target</i></th>
-                                  <th> <i class="fa fa-sticky-note-o" aria-hidden="true"></i>Fuzzer Name</th>
-                                  <th> <i class="fa fa-eye" aria-hidden="true"> Is Working</i></th>
+                                  <th> <i class="fa fa-crosshairs" aria-hidden="true"> </i> Target</th>
+                                  <th> <i class="fa fa-sticky-note-o" aria-hidden="true"></i> Fuzzer Name</th>
+                                  <th> <i class="fa fa-eye" aria-hidden="true"></i> Is Working</th>
                                   <th> Testcases</th>
                                   <th> Crashes</th>
-                                  <th> <i class="fa fa-server" aria-hidden="true"> IP (Public)</i></th>
-                                  <th> <i class="fa fa-server" aria-hidden="true"> IP (Private)</i></th>
-                                  <th> <i class="fa fa-calendar-o" aria-hidden="true"> Registed Date</i></th>
-                                  <th> <i class="fa fa-calendar-o" aria-hidden="true"> </i>Last ping</th>
                               </tr>
                               </thead>
                               <tbody>
@@ -77,10 +73,6 @@
                                 {% endif %}
                                 <td><span class="label label-warning">{{machine.testcase}} Testcases</span></td>
                                 <td><span class="label label-info">{{machine.crash}} Crashes</span></td>
-                                <td>{{machine.pub_ip}}</td>
-                                <td>{{machine.pri_ip}}</td>
-                                <td>{{machine.reg_date}}</td>
-                                <td>{{machine.ping}}</td>
                                 </tr>
                                 {% endfor %}
                               {% endif %}

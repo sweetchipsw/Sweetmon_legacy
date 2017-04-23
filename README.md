@@ -1,31 +1,67 @@
 # SWEETMON
-The monitoring system for fuzzers based python+django.
+An universal fuzzing  monitoring framework for fuzzers based python+django.
+
+Sweetmon is a framework to monitor fuzzers and crashes developed by sweetchip.
+
+This project provides several functions to gather, 
+
+You should use sweetmon-client to interact with server. Please check sweetmon-client project at here.
 
 
+
+## Screenshots
+
+1. Showing all of fuzzers
+2. Providing crash information
+3. Users can upload their fuzzer and testcases.
+4. Supports multiple users.
 
 ## Installation
+
+- Environment
+  - Ubuntu 16.04.2 LTS (Server)
+  - Python3
+  - Django 1.11
 
 1. Install python + django + apache2
 
    ```shell
-   a
+   sudo apt-get install python3
+   sudo apt-get install apache2
+   sudo pip install django
+   ```
+
+2. Set wsgi
+
+3. (Optional, but highly recommended) Make your server secure.
+
+   1. Apply SSL (Using letsencrypt, free SSL and easy installation)
+
+4. Generate superuser
+
+   ``` sh
+   python manage.py createsuperuser
    ```
 
    ​
 
-2. Set wsgi
+5. Install sweetmon-client
 
-3. (Optional) Make your server secure. (Apply SSL)
+# WIKI
 
-4. Install sweetmon-client
+Please check this page.
+
+
 
 # Function
 
 Sweetmon provides several functions for monitoring fuzzers and crashes.
 
 * Monitoring Fuzzer
-  * User can monitor fuzzer and machine.
-  * IP, Name, …
+  * Fuzzer
+    * Number of crashes
+  * Machine
+  * ​
 * Monitoring Crashes
   * First / Last reported time
   * Number of (duplicated) crashes
@@ -39,6 +75,16 @@ Sweetmon provides several functions for monitoring fuzzers and crashes.
 
 # Directory
 - sweetmon : Monitor system (Django)
+- ​
+
+
+
+
+# PS
+
+1. I'm waiting for your pull requests thank you.
+2. Please create Issue if you have any questions or requests.
+3. Please check the http://blog.sweetchip.kr/408 
 
 
 
