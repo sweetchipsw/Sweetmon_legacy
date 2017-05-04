@@ -5,9 +5,7 @@ import os
 from django.conf import settings
 
 # TELEBOT_APIKEY = "260965123:AAETYjK6xe5DyjQNhMw6g8HGsmu3n8VVqzo"
-TELEBOT_APIKEY = "344650157:AAH7ByDM5hPC42rE-zUyYOsVlZVOyHiKPl0"
-API_KEY = TELEBOT_APIKEY
-# API_KEY = settings.TELEBOT_APIKEY
+API_KEY = settings.TELEBOT_APIKEY
 
 URL_BASE = "https://api.telegram.org/bot"+API_KEY
 URL_GETME = URL_BASE+"/GetMe"
@@ -36,16 +34,14 @@ def ParseKey(result):
 
 	return user_info
 
-
 def UpdateSecretKey():
 	req_url = URL_RECEIVE
 	try:
 		result = requests.get(req_url).json()
-		ParseKey(result)
+		result = ParseKey(result)
 	except Exception as e:
 		return False
 	return result
-
 
 def send_message(sender_id, target_id, text):
 	target_id = str(target_id)
@@ -64,5 +60,4 @@ def send_message(sender_id, target_id, text):
 def sendswcp(message):
 	send_message(API_KEY, "293123771", message)
 
-
-CheckSecretKey()
+print(UpdateSecretKey())

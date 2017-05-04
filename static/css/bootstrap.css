@@ -183,8 +183,11 @@ table {
   border-spacing: 0;
   border-collapse: collapse;
 }
-td,
+td{
+  word-break: break-all;
+},
 th {
+  word-break: break-all;
   padding: 0;
 }
 @media print {
@@ -2062,6 +2065,9 @@ table {
 }
 th {
   text-align: left;
+}
+td {
+    word-break: break-all;
 }
 .table {
   width: 100%;

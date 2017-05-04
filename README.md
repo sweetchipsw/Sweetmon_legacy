@@ -71,7 +71,7 @@ Sweetmon provides several functions for monitoring fuzzers and crashes.
 * Hosting Fuzzer and Testcase
   * Support generating One-Time-URL to download fuzzer or testcase.
 * Reports
-  * ​
+  * Memo
 
 # Directory
 - sweetmon : Monitor system (Django)
@@ -82,8 +82,8 @@ Sweetmon provides several functions for monitoring fuzzers and crashes.
 
 # PS
 
-1. I'm waiting for your pull requests thank you.
-2. Please create Issue if you have any questions or requests.
+1. I'm waiting for your pull requests!
+2. Please create Issue or send me an email to me if you have any questions or requests.
 3. Please check the http://blog.sweetchip.kr/408 
 
 
