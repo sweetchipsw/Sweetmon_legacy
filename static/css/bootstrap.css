@@ -2490,6 +2490,7 @@ fieldset[disabled] .checkbox label {
   padding-top: 7px;
   padding-bottom: 7px;
   margin-bottom: 0;
+  word-break: break-all;
 }
 .form-control-static.input-lg,
 .form-control-static.input-sm {
