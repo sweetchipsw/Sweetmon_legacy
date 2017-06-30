@@ -59,7 +59,7 @@ class Crash(models.Model):
 	crash_file = models.FileField(storage=private_storage, upload_to=getUploadPath)
 	reg_date = models.DateTimeField(default=datetime.now, blank=True) # first date
 	latest_date = models.DateTimeField(auto_now=True)
-	comment = models.CharField(max_length=1000)
+	comment = models.CharField(max_length=100000)
 	owner = models.ForeignKey(User)
 
 	# DEPRECATED

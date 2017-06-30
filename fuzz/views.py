@@ -115,7 +115,7 @@ def crash(request):
 	target = fuzzer.target
 	fuzzer_name = fuzzer.fuzzer_name
 
-	crash_hash = hashlib.sha1(title).hexdigest()
+	crash_hash = hashlib.sha1(title.encode("utf-8")).hexdigest()
 	
 	Icrash = None
 	dup_flag = False
@@ -148,7 +148,7 @@ def crash(request):
 		return HttpResponse("success")
 	else:
 		crashfile = request.FILES['file']
-		crashfile.name = hashlib.sha1((crashfile.name+get_random_string(300))).hexdigest()
+		crashfile.name = hashlib.sha1((crashfile.name+get_random_string(300)).encode("utf-8")).hexdigest()
 		# crash_size = crashfile.size
 		link = crashfile.name
 		new_crash = Crash(owner=fuzzer.owner, crash_hash=crash_hash, fuzzer_name=fuzzer_name, target=target, link=link, title=title, crashlog=crashlog, comment="", crash_file=crashfile)
@@ -186,7 +186,7 @@ def generateToken(request):
 	if not CheckPostVariable(request.POST, parameterList):
 		raise Http404
 
-	print("hit")
+	# print("hit")
 
 
 	error = False
@@ -201,7 +201,7 @@ def generateToken(request):
 	crash = allow_file_types[file_type].objects.get(id=idx)
 
 	# Check owner
-	print(crash.owner != request.user)
+	# print(crash.owner != request.user)
 	if crash.owner != request.user:
 		raise Http404
 
@@ -209,8 +209,8 @@ def generateToken(request):
 	storage = crash.crash_file.storage.location
 
 	fname = crash.crash_file.name
-	full_path = storage+"/"+fname
-	new_token = hashlib.sha256((get_random_string(1024))).hexdigest()
+	full_path = storage + "/" + fname
+	new_token = hashlib.sha256((get_random_string(1024).encode('utf-8'))).hexdigest()
 
 	# Check already exists OTU(One Time Url) by filename.
 	# It prevents generating duplcated URL
@@ -233,7 +233,7 @@ def generateToken(request):
 		result['token'] = new_token
 		result['url'] = current_uri+"/fuzz/download?token="+new_token
 		result['dup'] = False
-		otf = OnetimeToken(owner=request.user, token = new_token, real_path = full_path, is_expired=False)
+		otf = OnetimeToken(owner=request.user, token=new_token, real_path = full_path, is_expired=False)
 		otf.save()
 
 	return JsonResponse(result)

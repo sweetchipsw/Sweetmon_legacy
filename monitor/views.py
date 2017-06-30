@@ -7,6 +7,13 @@ from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.models import User
 import datetime
 
+def CheckPostVariable(POST, parameter):
+	for param in parameter:
+		if param not in POST:
+			return False
+	return True
+
+
 def check_auth(request):
 	if not request.user.username:
 		raise Http404
@@ -60,16 +67,25 @@ def crash_details(request, idx):
 def crash_details_modify(request, idx):
 	check_auth(request)
 	crash_info = None
-	# if request.POST.has_key('comment') == False:
-	# 	raise Http404
+
+	parameterList = ['comment']
+	if not CheckPostVariable(request.POST, parameterList):
+		raise Http404
+
 	try:
+		comment = request.POST['comment']
 		crash_info = Crash.objects.get(id=idx, owner=request.user)
 	except ObjectDoesNotExist:
 	    raise Http404
+
+	crash_info.comment = comment
+	crash_info.save()
+
 	context = {'crash': crash_info, 'userinfo':request.user}
 	return render(request, 'monitor/crash/detail.html', context)
 
 def ShowProfile(request):
+	# DEPRECATED
 	check_auth(request)
 	profile = None
 	try:
@@ -80,9 +96,11 @@ def ShowProfile(request):
 	return render(request, 'profile.html', context)
 
 def ConvertOntoBool(s):
+	# DEPRECATED
 	return True if s == "on" else False 
 
 def ModifyProfile(request):
+	# DEPRECATED
 	check_auth(request)
 
 	use_telegram_alert = ConvertOntoBool(request.POST.get('use_telegram_alert', ""))

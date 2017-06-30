@@ -55,10 +55,9 @@
                                   <th><i class="fa fa-crosshairs" aria-hidden="true"> Target</i></th>
                                   <th><i class="fa fa-sticky-note-o" aria-hidden="true"></i> Fuzzer</th>
                                   <th class="hidden-phone"><i class="fa fa-question-circle"></i> Summary</th>
-                                  <!-- <th><i class="fa fa-calendar-o" aria-hidden="true"> </i> First Reported Date</th> -->
                                   <th><i class="fa fa-calendar-o" aria-hidden="true"> </i> Latest Reported Date</th>
                                   <th><i class=" fa fa-edit"></i> Count dups</th>
-                                  <!-- <th><i class=" fa fa-edit"></i> Reproducable</th> -->
+
                               </tr>
                               </thead>
                               <tbody>
@@ -69,10 +68,8 @@
                                 <td>{{crash.target}}</td>
                                 <td><span class="label label-primary">{{crash.fuzzer_name}}</span></td>
                                 <td><a href="/monitor/crash/{{crash.id}}/">{{crash.title}}</a></td>
-                                <!-- <td><span class="label label-warning">{{crash.reg_date}}</span></td> -->
                                 <td><span class="label label-success">{{crash.latest_date}}</span></td>
                                 <td><span class="label label-info">{{crash.dup_crash}} Crashes</span></td>
-                                <!-- <td>{{crash.reproducable}}</td> -->
                                 </tr>
                                 {% endfor %}
                               {% endif %}
