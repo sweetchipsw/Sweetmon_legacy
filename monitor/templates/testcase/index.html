@@ -64,8 +64,8 @@
                               {% if testcase_list %}
                                 {% for crash in testcase_list %}
                                 <tr>
-                                <td>{{ crash.idx }}</td>
-                                <td><a href="/testcase/{{crash.idx}}/">{{crash.title}}</a></td>
+                                <td>{{ crash.id }}</td>
+                                <td><a href="/testcase/{{crash.id}}/">{{crash.title}}</a></td>
                                 <td>{{crash.target}}</td>
                                 <td>{{crash.description}}</td>
                                 </tr>

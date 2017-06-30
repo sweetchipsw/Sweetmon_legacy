@@ -20,7 +20,7 @@ def testcase_details(request,idx):
 	check_auth(request)
 	crash_info = None
 	try:
-		testcase = Testcase.objects.get(idx=idx)
+		testcase = Testcase.objects.get(id=idx)
 	except ObjectDoesNotExist:
 	    raise Http404
 	context = {'testcase': testcase, 'userinfo':request.user}

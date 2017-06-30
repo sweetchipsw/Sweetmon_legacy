@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from monitor.models import Machine, AuthInformation,Crash, OnetimeToken, AlertInfoUser
+from monitor.models import Machine, AuthInformation,Crash, OnetimeToken, TelegramBot, Profile
 from django.http import Http404
 import os
 import hashlib
@@ -8,7 +8,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from django.utils.crypto import get_random_string
 from django.conf import settings
-from telealert import *
+# from telealert import *
+
+def CheckPostVariable(POST, parameter):
+	for param in parameter:
+		if param not in POST:
+			return False
+	return True
 
 # Create your views here.
 def check_auth(request):
@@ -22,49 +28,44 @@ def register(request):
 	if request.method != 'POST':
 		raise Http404
 
+	parameterList = ['userkey', 'fuzzer_name', 'pri_ip', 'pub_ip', 'target']
+	if not CheckPostVariable(request.POST, parameterList):
+		raise Http404
+
 	token = ""
-	if request.POST.has_key('password') == False:
-		raise Http404
-	if request.POST.has_key('fuzzer_name') == False:
-		raise Http404
-	if request.POST.has_key('pri_ip') == False:
-		raise Http404
-	if request.POST.has_key('pub_ip') == False:
-		raise Http404
-	if request.POST.has_key('target') == False:
-		raise Http404
 		
-	password = request.POST['password']
+	password = request.POST['userkey']
 	fuzzer_name = request.POST['fuzzer_name']
 	pri_ip = request.POST['pri_ip']
 	pub_ip = request.POST['pub_ip']
 	target = request.POST['target']
 
-	authinfo = AuthInformation.objects.get(name="sweetfuzz")
-	serverpass = authinfo.password
-	password = hashlib.sha256("th1s1ss0rt"+password.encode("utf-8")).hexdigest()
+	# Check valid hashkey
+	try:
+		profile = Profile.objects.get(userkey=password)
+	except ObjectDoesNotExist:
+	    raise Http404	
 
-
-	print(serverpass, password)
-	if password != serverpass:
-		raise Http404
+	#Generate new hash
+	# password = hashlib.sha256((settings.HASHSALT+password)).hexdigest()
 
 	token = get_random_string(300)
 	token += fuzzer_name
 	token += pri_ip
 	token += pub_ip
 	token += get_random_string(300)
-	token = hashlib.sha1(token).hexdigest()
+	token = hashlib.sha1(token.encode('utf-8')).hexdigest()
 
-	Machine(token=token, fuzzer_name=fuzzer_name, pub_ip=pub_ip, pri_ip=pri_ip, target=target).save()
+	Machine(owner=profile.owner, token=token, fuzzer_name=fuzzer_name, pub_ip=pub_ip, pri_ip=pri_ip, target=target).save()
 
 	return HttpResponse(str(token))
 
 def ping(request):
 	if request.method != 'POST':
 		raise Http404
-	# ping
-	if request.POST.has_key('token') == False:
+
+	parameterList = ['token']
+	if not CheckPostVariable(request.POST, parameterList):
 		raise Http404
 
 	token = request.POST['token']
@@ -77,16 +78,12 @@ def ping(request):
 def status(request):
 	if request.method != 'POST':
 		raise Http404
-	# for testcase per min / crash count
-	if request.POST.has_key('token') == False:
-		raise Http404
-	if request.POST.has_key('testcase') == False:
-		raise Http404
-	if request.POST.has_key('crash') == False:
+
+	parameterList = ['token', 'testcase', 'crash']
+	if not CheckPostVariable(request.POST, parameterList):
 		raise Http404
 
 	token = request.POST['token']
-
 	testcase = request.POST['testcase']
 	crash = request.POST['crash']
 
@@ -101,18 +98,13 @@ def crash(request):
 
 	if request.method != 'POST':
 		raise Http404
-	if request.POST.has_key('token') == False:
-		raise Http404
-	if request.POST.has_key('crashlog') == False:
-		raise Http404
-	if request.POST.has_key('title') == False:
+	parameterList = ['token', 'crashlog', 'title']
+	if not CheckPostVariable(request.POST, parameterList):
 		raise Http404
 
 	token = request.POST['token']
 	crashlog = request.POST['crashlog']
 	title = request.POST['title']
-
-
 
 	fuzzer = None
 	try:
@@ -157,9 +149,9 @@ def crash(request):
 	else:
 		crashfile = request.FILES['file']
 		crashfile.name = hashlib.sha1((crashfile.name+get_random_string(300))).hexdigest()
-		crash_size = crashfile.size
+		# crash_size = crashfile.size
 		link = crashfile.name
-		new_crash = Crash(crash_hash=crash_hash, fuzzer_name=fuzzer_name, target=target, link=link, title=title, crashlog=crashlog, comment="", crash_size=crash_size, crash_file=crashfile)
+		new_crash = Crash(owner=fuzzer.owner, crash_hash=crash_hash, fuzzer_name=fuzzer_name, target=target, link=link, title=title, crashlog=crashlog, comment="", crash_file=crashfile)
 		new_crash.save()
 
 
@@ -180,19 +172,22 @@ def crash(request):
 			message = "[New crash detected (From sweetmon)] "
 			send_message(sender, target, message);
 		"""
-		sendswcp("[New crash detected (From sweetmon)] "+title)
+		# sendswcp("[New crash detected (From sweetmon)] "+title)
 	return HttpResponse("success")
 
 def generateToken(request):
 
 	if request.method != 'POST':
 		raise Http404
-	if request.POST.has_key('idx') == False:
-		raise Http404
-	if request.POST.has_key('type') == False:
-		raise Http404
 
 	check_auth(request)
+
+	parameterList = ['idx', 'type']
+	if not CheckPostVariable(request.POST, parameterList):
+		raise Http404
+
+	print("hit")
+
 
 	error = False
 	idx = request.POST['idx']
@@ -202,8 +197,13 @@ def generateToken(request):
 	if file_type not in allow_file_types.keys(): # check file types
 		raise Http404
 
-	# Get Instanck
-	crash = allow_file_types[file_type].objects.get(idx=idx)
+	# Get Instance
+	crash = allow_file_types[file_type].objects.get(id=idx)
+
+	# Check owner
+	print(crash.owner != request.user)
+	if crash.owner != request.user:
+		raise Http404
 
 	# Get storage path
 	storage = crash.crash_file.storage.location
@@ -233,7 +233,7 @@ def generateToken(request):
 		result['token'] = new_token
 		result['url'] = current_uri+"/fuzz/download?token="+new_token
 		result['dup'] = False
-		otf = OnetimeToken(token = new_token, real_path = full_path, is_expired=False)
+		otf = OnetimeToken(owner=request.user, token = new_token, real_path = full_path, is_expired=False)
 		otf.save()
 
 	return JsonResponse(result)

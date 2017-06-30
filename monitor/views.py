@@ -18,8 +18,9 @@ def index(request):
 	issue_count = Issue.objects.filter(owner=request.user).count()
 	cve_count = Issue.objects.filter(owner=request.user).exclude(cve__exact='').count()
 	server_count = Machine.objects.filter(owner=request.user).values('pub_ip').distinct().count()
+	profilenum = Profile.objects.filter(owner=request.user).order_by('-id')[0].id
 
-	context = {'server_count':server_count, 'cve_count':cve_count,'issue_count':issue_count, 'crash_count': crash_count, 'machine_count': machine_count, 'userinfo':request.user}
+	context = {'server_count':server_count, 'cve_count':cve_count,'issue_count':issue_count, 'crash_count': crash_count, 'machine_count': machine_count, 'userinfo':request.user, 'profilenum':profilenum}
 	
 	return render(request, 'monitor/index.html', context)
 
@@ -50,7 +51,7 @@ def crash_details(request, idx):
 	check_auth(request)
 	crash_info = None
 	try:
-		crash_info = Crash.objects.get(idx=idx, owner=request.user)
+		crash_info = Crash.objects.get(id=idx, owner=request.user)
 	except ObjectDoesNotExist:
 	    raise Http404
 	context = {'crash': crash_info, 'userinfo':request.user}
@@ -62,7 +63,7 @@ def crash_details_modify(request, idx):
 	# if request.POST.has_key('comment') == False:
 	# 	raise Http404
 	try:
-		crash_info = Crash.objects.get(idx=idx, owner=request.user)
+		crash_info = Crash.objects.get(id=idx, owner=request.user)
 	except ObjectDoesNotExist:
 	    raise Http404
 	context = {'crash': crash_info, 'userinfo':request.user}

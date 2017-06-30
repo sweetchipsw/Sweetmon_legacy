@@ -1,5 +1,6 @@
 from django.conf.urls import url
-
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
@@ -11,3 +12,6 @@ urlpatterns = [
     url(r'^crash/(?P<idx>\d+)/$', views.crash_details, name='crash_detail'),
     url(r'^crash/(?P<idx>\d+)/modify$', views.crash_details_modify, name='modify'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.STATIC_ROOT)

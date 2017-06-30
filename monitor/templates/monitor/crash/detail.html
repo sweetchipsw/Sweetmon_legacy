@@ -42,7 +42,7 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-          	<h3><i class="fa fa-angle-right"></i> Crash Information, IDX : {{crash.idx}}</h3>   	
+          	<h3><i class="fa fa-angle-right"></i> Crash Information, IDX : {{crash.id}}</h3>   	
           	<!-- BASIC FORM ELELEMNTS -->
           	<div class="row mt">
 
@@ -51,7 +51,7 @@
                   <button type="button" class="btn btn-theme1 pull-right">Back to lists</button></a>
                   	  <h4 class="mb">Information</h4> 
                   	  <hr>
-                      <form class="form-horizontal style-form" method="post" action="/monitor/crash/{{crash.idx}}/modify">
+                      <form class="form-horizontal style-form" method="post" action="/monitor/crash/{{crash.id}}/modify">
                           <div class="form-group">
                               <label class="col-lg-2 col-sm-2 control-label">Crash Title</label>
                               <div class="col-sm-10">
@@ -61,7 +61,7 @@
                           <div class="form-group">
                               <label class="col-lg-2 col-sm-2 control-label">Reported Date</label>
                               <div class="col-sm-10">
-                                  <p class="form-control-static">{{crash.reg_date}}</p>
+                                  <p class="form-control-static">{{crash.reg_date}} <b>({{ crash.reg_date|timesince }} ago)</b></p>
                               </div>
                           </div>
                           <div class="form-group">
@@ -127,7 +127,7 @@
                           <div class="form-group">
                               <label class="col-lg-2 col-sm-2 control-label">Comment</label>
                               <div class="col-sm-10">
-                                  <input type="text" class="form-control" value="{{crash.comment}}">
+                                  <textarea type="text" class="form-control" value="{{crash.comment}}"></textarea>
                                   {% csrf_token %}
                               </div>
                           </div>
@@ -170,7 +170,7 @@
          $.ajax({
           url : '/fuzz/geturl',
           type: 'POST',
-          data : {idx:'{{crash.idx}}', type:'crash',"csrfmiddlewaretoken": "{{ csrf_token }}"},
+          data : {idx:'{{crash.id}}', type:'crash',"csrfmiddlewaretoken": "{{ csrf_token }}"},
           success:function(data){
               $('input[id=OTU_input]').attr('value', data['url'])
           }
@@ -180,7 +180,7 @@
          $.ajax({
           url : '/fuzz/geturl',
           type: 'POST',
-          data : {idx:'{{crash.idx}}', type:'crash',"csrfmiddlewaretoken": "{{ csrf_token }}"},
+          data : {idx:'{{crash.id}}', type:'crash',"csrfmiddlewaretoken": "{{ csrf_token }}"},
           success:function(data){
               window.location.href=data['url']
           }

@@ -65,10 +65,10 @@
                               {% if crashes %}
                                 {% for crash in crashes %}
                                 <tr>
-                                <td>{{ crash.idx }}</td>
+                                <td>{{ crash.id }}</td>
                                 <td>{{crash.target}}</td>
                                 <td><span class="label label-primary">{{crash.fuzzer_name}}</span></td>
-                                <td><a href="/monitor/crash/{{crash.idx}}/">{{crash.title}}</a></td>
+                                <td><a href="/monitor/crash/{{crash.id}}/">{{crash.title}}</a></td>
                                 <!-- <td><span class="label label-warning">{{crash.reg_date}}</span></td> -->
                                 <td><span class="label label-success">{{crash.latest_date}}</span></td>
                                 <td><span class="label label-info">{{crash.dup_crash}} Crashes</span></td>
