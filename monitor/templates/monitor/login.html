@@ -47,7 +47,11 @@
     <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
     <script type="text/javascript" src="/assets/js/jquery.backstretch.min.js"></script>
     <script>
-        $.backstretch("/assets/img/login-bg.jpg", {speed: 500});
+  $.backstretch([
+      "http://dl.dropbox.com/u/515046/www/outside.jpg"
+    , "http://dl.dropbox.com/u/515046/www/garfield-interior.jpg"
+    , "http://dl.dropbox.com/u/515046/www/cheers.jpg"
+  ], {duration: 3000, fade: 750});
     </script>
 
 

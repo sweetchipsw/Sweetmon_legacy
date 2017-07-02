@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from monitor.models import Machine, AuthInformation,Crash, OnetimeToken, AlertInfoUser
+from monitor.models import Machine, Crash, OnetimeToken, AlertInfoUser
 from django.http import Http404
 import os
 import hashlib

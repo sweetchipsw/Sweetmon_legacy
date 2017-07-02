@@ -95,27 +95,62 @@
                       
                       <div class="row mt">
 
-						<div class="col-md-4 mb">
-							<!-- WHITE PANEL - TOP USER -->
-							<div class="white-panel pn">
-								<div class="white-header">
-									<h5>About you</h5>
-								</div>
-								<p><img src="/assets/img/ui-sam.jpg" class="img-circle" width="80"></p>
-								<p><b>sweetchip</b></p>
-								<div class="row">
-									<div class="col-md-6">
-										<p class="small mt">Found</p>
-										<p>4 bugs (1 CVE)</p>
-									</div>
-									<div class="col-md-6">
-										<p class="small mt">Total Rewards (Until now)</p>
-										<p>$ 0</p>
-									</div>
-								</div>
-							</div>
-						</div><!-- /col-md-4 -->
+            <div class="col-md-4 mb">
+              <!-- WHITE PANEL - TOP USER -->
+              <div class="white-panel pn">
+                <div class="white-header">
+                  <h5>About you</h5>
+                </div>
+                <p><img src="/assets/img/ui-sam.jpg" class="img-circle" width="80"></p>
+                <p><b>sweetchip</b></p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p class="small mt">Found</p>
+                    <p>4 bugs (1 CVE)</p>
+                  </div>
+                  <div class="col-md-6">
+                    <p class="small mt">Total Rewards (Until now)</p>
+                    <p>$ 0</p>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /col-md-4 -->
+
+            <div class="col-md-4 mb">
+              <!-- WHITE PANEL - TOP USER -->
+              <div class="white-panel pn">
+                <div class="white-header">
+                  <h5>About Developer</h5>
+                </div>
+                <p><img src="/assets/img/ui-sam.jpg" class="img-circle" width="80"></p>
+                <p><b>sweetchip</b></p>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p class="small mt">GITHUB</p>
+                    <p>http://github.com/sweetchipsw/</p>
+                  </div>
+                  <div class="col-md-6">
+                    <p class="small mt">BLOG</p>
+                    <p>http://blog.sweetchip.kr</p>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /col-md-4 -->
+
 				
+            <!-- TODO PANEL -->
+            <div class="col-lg-4 col-md-4 col-sm-4 mb">
+              <div class="steps pn">
+                  <input id='op1' name='op1' type='checkbox'/>
+                  <label for='op1'>Bitcoin : aaaa..</label>
+                  <input id='op2' name='op2' type='checkbox'/>
+                  <label for='op2'>Ethereum : </label>
+                  <input id='op3' name='op3' type='checkbox'/>
+                  <label for='op3'>Ethereum Classic : </label>
+                  <input type='submit' value='Thank you for your donation' id='submit'/>
+              </div>
+            </div><!--/col-md-4 -->
+
 						
 						<div class="col-md-4 mb">
 							<!-- INSTAGRAM PANEL -->
@@ -305,7 +340,42 @@
     <!--script for this page-->
     <script src="/assets/js/sparkline-chart.js"></script>    
 	<script src="/assets/js/zabuto_calendar.js"></script>	
-	
+	 <script type="text/javascript">
+        $(document).ready(function () {
+        var unique_id = $.gritter.add({
+            // (string | mandatory) the heading of the notification
+            title: 'Welcome to sweetmon!',
+            // (string | mandatory) the text inside the notification
+            text: 'Please visit my <a href="http://blog.sweetchip.kr/">Blog</a> and <a href="http://github.com/sweetchipsw/">GITHUB</a>',
+            // (string | optional) the image to display on the left
+            image: '/assets/img/ui-sam.jpg',
+            // (bool | optional) if you want it to fade out on its own or just sit there
+            sticky: false,
+            // (int | optional) the time you want it to be alive for before fading out
+            time: '',
+            // (string | optional) the class name you want to apply to that specific message
+            class_name: 'my-sticky-class'
+        });
+
+                var unique_id = $.gritter.add({
+            // (string | mandatory) the heading of the notification
+            title: 'New crash detected!!',
+            // (string | mandatory) the text inside the notification
+            text: 'sweetfuzz-1 found new crash. To see details, please press the button',
+            // (string | optional) the image to display on the left
+            image: '/assets/img/ui-sam.jpg',
+            // (bool | optional) if you want it to fade out on its own or just sit there
+            sticky: false,
+            // (int | optional) the time you want it to be alive for before fading out
+            time: '',
+            // (string | optional) the class name you want to apply to that specific message
+            class_name: 'my-sticky-class'
+        });
+
+        return false;
+        });
+  </script>
+
 	<script type="application/javascript">
         function myNavFunction(id) {
             $("#date-popover").hide();

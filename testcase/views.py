@@ -12,7 +12,7 @@ def check_auth(request):
 
 def index(request):
 	check_auth(request)
-	testcase_list = Testcase.objects.all()
+	testcase_list = Testcase.objects.filter(owner=request.user)
 	context = {'testcase_list': testcase_list, 'userinfo':request.user}
 	return render(request, 'testcase/index.html', context)
 

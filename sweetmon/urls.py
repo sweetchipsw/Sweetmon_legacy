@@ -19,7 +19,9 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, views
-from monitor.views import ShowProfile, ModifyProfile
+
+# DEPRECATED
+# from monitor.views import ShowProfile, ModifyProfile
 
 urlpatterns = [
 	url(r'^$',include('monitor.urls'), name='index'),
@@ -30,6 +32,8 @@ urlpatterns = [
     url(r'^track/', include('track.urls')),
     url(r'^account/login/',auth_views.login,name='login',kwargs={'template_name': 'login.html'}),
     url(r'^account/logout/',auth_views.logout,name='logout',kwargs={'next_page': settings.LOGIN_URL,}),
-    url(r'^account/profile/$',ShowProfile, name="profile"),
-    url(r'^account/profile/modify$',ModifyProfile, name="profile"),
+
+    # DEPRECATED
+    # url(r'^account/profile/$',ShowProfile, name="profile"),
+    # url(r'^account/profile/modify$',ModifyProfile, name="profile"),
 ]

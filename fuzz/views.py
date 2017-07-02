@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from monitor.models import Machine, AuthInformation,Crash, OnetimeToken, TelegramBot, Profile
+from monitor.models import Machine, Crash, OnetimeToken, TelegramBot, Profile
 from django.http import Http404
 import os
 import hashlib
@@ -197,7 +197,7 @@ def generateToken(request):
 	if file_type not in allow_file_types.keys(): # check file types
 		raise Http404
 
-	# Get Instance
+	# Get Crash Instance
 	crash = allow_file_types[file_type].objects.get(id=idx)
 
 	# Check owner
@@ -240,9 +240,9 @@ def generateToken(request):
 
 def downloadFileByToken(request):
 	# Check parameter
-	if request.GET.has_key('token') == False:
+	parameterList = ['token']
+	if not CheckPostVariable(request.GET, parameterList):
 		raise Http404
-
 	# Get 'token' parameter
 	token = request.GET['token']
 

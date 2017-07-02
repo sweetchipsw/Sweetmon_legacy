@@ -67,7 +67,7 @@
                                 <td>{{ crash.id }}</td>
                                 <td><a href="/testcase/{{crash.id}}/">{{crash.title}}</a></td>
                                 <td>{{crash.target}}</td>
-                                <td>{{crash.description}}</td>
+                                <td>{{crash.description|truncatechars:30}}</td>
                                 </tr>
                                 {% endfor %}
                               {% endif %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 # Register your models here.
-from monitor.models import Profile, Machine, Crash, AuthInformation, Testcase, Issue, OnetimeToken, TelegramBot
+from monitor.models import Profile, Machine, Crash, Testcase, Issue, OnetimeToken, TelegramBot
 
 def get_all_field_names(Model):
 	return [f.name for f in Model._meta.get_fields()]
@@ -101,10 +101,11 @@ class IssueAdmin(admin.ModelAdmin):
 admin.site.register(Issue, IssueAdmin)
 
 # Register information of fuzzer
-class AuthInformationAdmin(admin.ModelAdmin):
-	list_display = get_all_field_names(AuthInformation)
-	exceptfield(list_display,["password"])
-admin.site.register(AuthInformation, AuthInformationAdmin)
+# DEPRECATED
+# class AuthInformationAdmin(admin.ModelAdmin):
+# 	list_display = get_all_field_names(AuthInformation)
+# 	exceptfield(list_display,["password"])
+# admin.site.register(AuthInformation, AuthInformationAdmin)
 
 
 class OnetimeTokenAdmin(admin.ModelAdmin):

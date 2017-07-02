@@ -12,7 +12,7 @@ def check_auth(request):
 
 def index(request):
 	check_auth(request)
-	issue_list = Issue.objects.all()
+	issue_list = Issue.objects.filter(owner=request.user)
 	context = {'issue_list': issue_list, 'userinfo':request.user}
 	return render(request, 'track/index.html', context)
 

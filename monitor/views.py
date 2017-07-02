@@ -84,46 +84,46 @@ def crash_details_modify(request, idx):
 	context = {'crash': crash_info, 'userinfo':request.user}
 	return render(request, 'monitor/crash/detail.html', context)
 
-def ShowProfile(request):
-	# DEPRECATED
-	check_auth(request)
-	profile = None
-	try:
-		profile = Profile.objects.get(user=request.user)
-	except ObjectDoesNotExist:
-	    raise Http404
-	context = {'profile':profile, 'userinfo':request.user}
-	return render(request, 'profile.html', context)
+# def ShowProfile(request):
+# 	# DEPRECATED
+# 	check_auth(request)
+# 	profile = None
+# 	try:
+# 		profile = Profile.objects.get(user=request.user)
+# 	except ObjectDoesNotExist:
+# 	    raise Http404
+# 	context = {'profile':profile, 'userinfo':request.user}
+# 	return render(request, 'profile.html', context)
 
-def ConvertOntoBool(s):
-	# DEPRECATED
-	return True if s == "on" else False 
+# def ConvertOntoBool(s):
+# 	# DEPRECATED
+# 	return True if s == "on" else False 
 
-def ModifyProfile(request):
-	# DEPRECATED
-	check_auth(request)
+# def ModifyProfile(request):
+# 	# DEPRECATED
+# 	check_auth(request)
 
-	use_telegram_alert = ConvertOntoBool(request.POST.get('use_telegram_alert', ""))
-	use_email_alert = ConvertOntoBool(request.POST.get('use_email_alert', ""))
-	public_key = request.POST.get('public_key', "")
-	telegram_id = request.POST.get('telegram_id', "")
-	use_encryption = ConvertOntoBool(request.POST.get('use_encryption', ""))
-	email = ConvertOntoBool(request.POST.get('email', ""))
+# 	use_telegram_alert = ConvertOntoBool(request.POST.get('use_telegram_alert', ""))
+# 	use_email_alert = ConvertOntoBool(request.POST.get('use_email_alert', ""))
+# 	public_key = request.POST.get('public_key', "")
+# 	telegram_id = request.POST.get('telegram_id', "")
+# 	use_encryption = ConvertOntoBool(request.POST.get('use_encryption', ""))
+# 	email = ConvertOntoBool(request.POST.get('email', ""))
 
-	profile = None
-	try:
-		profile = Profile.objects.get(user=request.user)
-	except ObjectDoesNotExist:
-	    raise Http404
+# 	profile = None
+# 	try:
+# 		profile = Profile.objects.get(user=request.user)
+# 	except ObjectDoesNotExist:
+# 	    raise Http404
 
-	profile.use_telegram_alert = use_telegram_alert
-	profile.use_email_alert = use_email_alert
-	profile.public_key = public_key
-	profile.telegram_id = telegram_id
-	profile.use_encryption = use_encryption
-	profile.user.email = email
+# 	profile.use_telegram_alert = use_telegram_alert
+# 	profile.use_email_alert = use_email_alert
+# 	profile.public_key = public_key
+# 	profile.telegram_id = telegram_id
+# 	profile.use_encryption = use_encryption
+# 	profile.user.email = email
 
-	profile.save()
+# 	profile.save()
 	
-	return redirect(ShowProfile)
+# 	return redirect(ShowProfile)
 

@@ -61,6 +61,7 @@ class Crash(models.Model):
 	latest_date = models.DateTimeField(auto_now=True)
 	comment = models.CharField(max_length=100000)
 	owner = models.ForeignKey(User)
+	is_encrypted = models.BooleanField(default=False)
 
 	# DEPRECATED
 	#isopen = models.BooleanField(default=True) # Deprecated
@@ -103,14 +104,14 @@ class Issue(models.Model):
 		return "%s" % (obj.title)
 
 
-class AuthInformation(models.Model):
-	name = models.CharField(max_length=256)
-	password = models.CharField(max_length=256)
-	do_hash = models.BooleanField(default=True)
-	owner = models.ForeignKey(User)
+# class AuthInformation(models.Model):
+# 	name = models.CharField(max_length=256)
+# 	password = models.CharField(max_length=256)
+# 	do_hash = models.BooleanField(default=True)
+# 	owner = models.ForeignKey(User)
 
-	def __str__(obj):
-		return "%s" % (obj.name)
+# 	def __str__(obj):
+# 		return "%s" % (obj.name)
 
 
 class OnetimeToken(models.Model):
@@ -195,5 +196,5 @@ def SyncUserProfile(sender, **kwargs):
 
 post_save.connect(create_profile, sender=User)
 post_save.connect(SyncUserProfile, sender=Profile)
-pre_save.connect(problem_hash_check_pre_save, sender=AuthInformation)
+# pre_save.connect(problem_hash_check_pre_save, sender=AuthInformation)
 
