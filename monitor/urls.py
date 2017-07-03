@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^crash/$', views.crash_list, name='crash_list'), # crashlist
     url(r'^crash/(?P<idx>\d+)/$', views.crash_details, name='crash_detail'),
     url(r'^crash/(?P<idx>\d+)/modify$', views.crash_details_modify, name='modify'),
-    url(r'^settings/$', views.settings, name='settings'),
+    url(r'^settings/$', views.settings_page, name='settings'),
 
 ]
 

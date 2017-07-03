@@ -48,7 +48,7 @@
                   <div class="col-md-12">
                       <div class="form-panel">
                           <table class="table table-striped table-advance table-hover">
-	                  	  	  <h4><i class="fa fa-angle-right"></i> Team Members</h4>
+	                  	  	  <h4><i class="fa fa-angle-right"></i> Team Members (Total : {{ profiles|length }})</h4>
 	                  	  	  <hr>
                               <thead>
                               <tr>
@@ -90,27 +90,34 @@
               <div class="col-lg-6 col-md-6 col-sm-12">
 
               <div class="showback">
-                <h4><i class="fa fa-angle-right"></i> Notification Settings </h4>
+                <h4><i class="fa fa-angle-right"></i> Notification Settings (from settings.py) </h4>
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Use Email Alert</label>
+                      {% if notification_setting.USE_EMAIL_ALERT %}
                       <div class="col-lg-10">
                           <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
                       </div>
+                      {% else %}
+                      <div class="col-lg-10">
+                          <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
+                      </div>
+                      {% endif%}
                   </div>
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Use Telegram Alert</label>
+                      {% if notification_setting.USE_TELEGRAM_ALERT %}
                       <div class="col-lg-10">
                           <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
                       </div>
-                  </div>
-                  <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Use Notification</label>
+                      {% else %}
                       <div class="col-lg-10">
-                          <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
+                          <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
                       </div>
+                      {% endif%}
                   </div>
+                  Please check the settings.py to modify settings.
                 </form>
 
               </div><!--/showback -->
@@ -118,7 +125,12 @@
 
               <!-- BASIC PROGRESS BARS -->
               <div class="showback">
-                <h4><i class="fa fa-angle-right"></i> Email Notification <span class="label label-danger">DISABLED</span> </h4>
+                <h4><i class="fa fa-angle-right"></i> Email Notification
+                  {% if notification_setting.USE_EMAIL_ALERT %}
+                  <span class="label label-danger">DISABLED</span>
+                  {% else %}
+                  <span class="label label-success">ENABLED</span>
+                  {% endif%} </h4>
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
@@ -136,7 +148,7 @@
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">My Email</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">sweetchip@sweetchip.kr</p>
+                          <p class="form-control-static">{{myprofile.email}}</p>
                       </div>
                   </div>
               <a id="add-test-email" class="btn btn-theme02 btn-sm" href="javascript:;">Test send</a>
@@ -144,27 +156,31 @@
                 </form>
               </div><!--/showback -->
 
-
               <div class="showback">
-                <h4><i class="fa fa-angle-right"></i> Telegram Notification <span class="label label-success">ENABLED</span> </h4>
+                <h4><i class="fa fa-angle-right"></i> Telegram Notification
+                {% if notification_setting.USE_TELEGRAM_ALERT %}
+                  <span class="label label-danger">DISABLED</span>
+                  {% else %}
+                  <span class="label label-success">ENABLED</span>
+                  {% endif%} </h4>
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Bot Name</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">sweetporori</p>
+                          <p class="form-control-static">{{myprofile.telegram.telegram_bot_name}}</p>
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Bot Key</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">344650157:AAH7ByDM5...</p>
+                          <p class="form-control-static">{{myprofile.telegram.telegram_bot_key}}</p>
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">My chat_id</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static"><b>344650157</b></p>
+                          <p class="form-control-static"><b>{{myprofile.telegram_chatid}}</b></p>
                           <span class="help-block">To get your own 'chat_id', Add '@get_id_bot' on telegram and send '/my_id' message.</span>
 
                       </div>
@@ -181,40 +197,42 @@
               </div><!--/showback -->
             </div><!--/col-lg-6 -->
 
-
-
-
             <div class="col-lg-6 col-md-6 col-sm-12">
-
-
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> Statistics </h4>
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Total Fuzzers</label>
-                      <div class="col-lg-10">
-                          <p class="form-control-static"><b>32</b></p>
+                      <label class="col-lg-2 col-sm-2 control-label">Total Servers</label>
+                      <div class="col-lg-4">
+                          <p class="form-control-static"><b>{{server_count}}</b></p>
                       </div>
-                  </div>
-                  <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Total Crashes</label>
-                      <div class="col-lg-10">
-                          <p class="form-control-static">7781</p>
+                      <label class="col-lg-2 col-sm-2 control-label">Total Fuzzers</label>
+                      <div class="col-lg-4">
+                          <p class="form-control-static"><b>{{machine_count}}</b></p>
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Total Testcases</label>
-                      <div class="col-lg-10">
-                          <p class="form-control-static">4</p>
+                      <div class="col-lg-4">
+                          <p class="form-control-static"><b>{{testcase_count}}</b></p>
+                      </div>
+                      <label class="col-lg-2 col-sm-2 control-label">Total Crashes</label>
+                      <div class="col-lg-4">
+                          <p class="form-control-static"><b>{{crash_count}}</b></p>
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Total issues</label>
-                      <div class="col-lg-10">
-                          <p class="form-control-static">3</p>
+                      <div class="col-lg-4">
+                          <p class="form-control-static">{{issue_count}}</p>
+                      </div>
+                      <label class="col-lg-2 col-sm-2 control-label">Total CVEs</label>
+                      <div class="col-lg-4">
+                          <p class="form-control-static"><b>{{cve_count}}</b></p>
                       </div>
                   </div>
+                  Statistics based on your account!
                   </form>
 
               </div><!--/showback -->
@@ -224,18 +242,6 @@
                 <h4><i class="fa fa-angle-right"></i> About sweetmon </h4>
                 <hr>
                 <form class="form-horizontal style-form" method="get">
-                  <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Django Ver</label>
-                      <div class="col-lg-10">
-                          <p class="form-control-static"><b>11.1.3</b></p>
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Sweetmon Ver</label>
-                      <div class="col-lg-10">
-                          <p class="form-control-static">1.0.1 (2017.07.03) </p>
-                      </div>
-                  </div>
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Check Update</label>
                       <div class="col-lg-10">
@@ -257,11 +263,6 @@
                   </form>
 
               </div><!--/showback -->
-              
-
-
-
-
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> About Developer </h4>
                 <hr>
@@ -282,7 +283,7 @@
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Donation</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">Bitcoin : 17BznPq7p3N3AH9caqHt3qHMwDp7GvFQ9K</p>
+                          <p class="form-control-static">Bitcoin : 17mzPSrAvkSnhRzsUhDydqtNMuqp8BFGeT</p>
                           <p class="form-control-static">Ethereum : 17BznPq7p3N3AH9caqHt3qHMwDp7GvFQ9K</p>
                       </div>
                   </div>
@@ -290,15 +291,6 @@
 
               </div><!--/showback -->
             </div><!-- /col-lg-6 -->
-            
-
-
-
-
-
-
-
-
 		</section><!--/wrapper -->
       </section><!-- /MAIN CONTENT -->
 

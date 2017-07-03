@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from monitor.models import Machine, Crash, Testcase, Issue, Profile
 from django.http import Http404
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.models import User
@@ -85,11 +86,20 @@ def crash_details_modify(request, idx):
 	context = {'crash': crash_info, 'userinfo':request.user}
 	return render(request, 'monitor/crash/detail.html', context)
 
-def settings(request):
+def settings_page(request):
 	check_auth(request)
-	profile = Profile.objects.all()
 
-	context = {'userinfo':request.user, 'profiles':profile}
+	machine_count = Machine.objects.filter(owner=request.user).count()
+	crash_count = Crash.objects.filter(owner=request.user).count()
+	issue_count = Issue.objects.filter(owner=request.user).count()
+	testcase_count = Testcase.objects.filter(owner=request.user).count()
+	cve_count = Issue.objects.filter(owner=request.user).exclude(cve__exact='').count()
+	server_count = Machine.objects.filter(owner=request.user).values('pub_ip').distinct().count()
+
+	profile = Profile.objects.all()
+	myprofile = Profile.objects.get(owner=request.user)
+	notification_setting = {'USE_EMAIL_ALERT':settings.USE_EMAIL_ALERT,'USE_TELEGRAM_ALERT':settings.USE_TELEGRAM_ALERT}
+	context = {'testcase_count':testcase_count, 'server_count':server_count, 'cve_count':cve_count,'issue_count':issue_count, 'crash_count': crash_count, 'machine_count': machine_count,'userinfo':request.user, 'profiles':profile, 'myprofile':myprofile, 'notification_setting':notification_setting}
 	return render(request, 'settings.html', context)
 
 
