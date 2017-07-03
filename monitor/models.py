@@ -125,7 +125,7 @@ class TelegramBot(models.Model):
 	telegram_bot_name = models.CharField(max_length=512)
 	telegram_bot_key = models.CharField(max_length=512)
 	is_activated = models.BooleanField(default=False)
-	is_public = models.BooleanField(default=False)
+	is_public = models.BooleanField(default=False, help_text="Note That, other user can modify/delete this configuration.")
 	owner = models.ForeignKey(User)
 
 	def __str__(obj):
@@ -136,18 +136,21 @@ class Profile(models.Model):
 	owner = models.ForeignKey(User)
 
 	##
-	email = models.EmailField(max_length=512, null=True, blank=True)
 	last_name = models.CharField(max_length=512, null=True, blank=True)
 	first_name = models.CharField(max_length=512, null=True, blank=True)
+	email = models.EmailField(max_length=512, null=True, blank=True)
+	test_email = models.BooleanField(default=False, help_text="Please check if you want to test email alert.")
+	telegram_chatid = models.CharField(max_length=12,null=True, blank=True, help_text="To get your chat_id, Add '@get_id_bot' and send '/my_id'")
+	test_telegram = models.BooleanField(default=False, help_text="Please check if you want to test telegram alert.")
 	##
 
 	profile_image = models.FileField(storage=userimageStorage, null=True, blank=True, upload_to=getimageUploadPath)
 	userkey = models.TextField(null=True, blank=True)
 	telegram = models.ForeignKey(TelegramBot, null=True, blank=True)
 	public_key = models.TextField(max_length=10000, blank=True, null=True)
-	use_telegram_alert = models.BooleanField(default=False)
-	use_email_alert = models.BooleanField(default=False)
-	use_encryption = models.BooleanField(default=False)
+	use_telegram_alert = models.BooleanField(default=False, help_text="You should fill out telegram_chatid to use this feature.")
+	use_email_alert = models.BooleanField(default=False, help_text="You should fill out email of your profile to use this feature.")
+	# use_encryption = models.BooleanField(default=False, help_text="DEPRECATED FEATURE")
 
 	def __str__(obj):
 		return "%s" % (obj.owner)
@@ -162,7 +165,7 @@ def create_profile(sender, **kwargs):
 	# Gen userkey
 	userkey = getSha256text( str(os.urandom(32)).encode('utf-8') )
 	user = kwargs["instance"]
-	print(kwargs, userkey, user)
+	# print(kwargs, userkey, user)
 	if kwargs["created"]:
 		# Create user
 		user_profile = Profile(owner=user, userkey=userkey)
@@ -176,13 +179,13 @@ def create_profile(sender, **kwargs):
 		user.is_staff = True;
 		user.save()
 
-		print("created")
-	print("hit")
+		# print("created")
+	# print("hit")
 
 def SyncUserProfile(sender, **kwargs):
 	# Gen userkey
 	profile = kwargs["instance"]
-	print(kwargs)
+	# print(kwargs)
 	if not kwargs["created"]:
 		# Create user
 		print(profile.owner.id)
@@ -191,8 +194,8 @@ def SyncUserProfile(sender, **kwargs):
 		user_profile.last_name = profile.last_name
 		user_profile.first_name = profile.first_name
 		user_profile.save()
-		print("modified")
-	print("hit sync")
+		# print("modified")
+	# print("hit sync")
 
 post_save.connect(create_profile, sender=User)
 post_save.connect(SyncUserProfile, sender=Profile)

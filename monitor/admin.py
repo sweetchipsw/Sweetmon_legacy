@@ -1,7 +1,7 @@
 from django.contrib import admin
-# Register your models here.
+from django.conf import settings
 from monitor.models import Profile, Machine, Crash, Testcase, Issue, OnetimeToken, TelegramBot
-
+from django.db.models import Q
 def get_all_field_names(Model):
 	return [f.name for f in Model._meta.get_fields()]
 
@@ -121,13 +121,14 @@ class TelegramBotAdmin(admin.ModelAdmin):
 
 	def get_queryset(self, request):
 		fields = super(self.__class__, self).get_queryset(request)
-		fields = fields.filter(owner_id=request.user, is_public=True)
+		fields = fields.filter(Q(owner_id=request.user) | Q(is_public=True))
 		return fields
 
 	def get_fieldsets(self, request, obj=None):
 		fields = super(self.__class__, self).get_fieldsets(request, obj)
 		fields[0][1]['fields'].remove('owner') # Hide field
 		return fields
+
 	def save_model(self, request, instance, form, change):
 		user = request.user 
 		instance = form.save(commit=False)
@@ -147,6 +148,15 @@ class ProfileAdmin(admin.ModelAdmin):
 		return "asd"
 
 	readonly_fields = ('userkey',)
+
+
+	if settings.USE_EMAIL_ALERT == False:
+		readonly_fields += ('test_email', 'use_email_alert',)
+
+	if settings.USE_TELEGRAM_ALERT == False:
+		readonly_fields += ('test_telegram', 'use_telegram_alert', )
+
+	# print(readonly_fields)
 
 	def get_queryset(self, request):
 		fields = super(self.__class__, self).get_queryset(request)

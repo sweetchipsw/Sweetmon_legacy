@@ -147,6 +147,7 @@ def crash(request):
 		Icrash.save()
 		return HttpResponse("success")
 	else:
+		# If new crash
 		crashfile = request.FILES['file']
 		crashfile.name = hashlib.sha1((crashfile.name+get_random_string(300)).encode("utf-8")).hexdigest()
 		# crash_size = crashfile.size
@@ -173,7 +174,7 @@ def crash(request):
 			send_message(sender, target, message);
 		"""
 		# sendswcp("[New crash detected (From sweetmon)] "+title)
-	return HttpResponse("success")
+	return HttpResponse("success") # Return success
 
 def generateToken(request):
 

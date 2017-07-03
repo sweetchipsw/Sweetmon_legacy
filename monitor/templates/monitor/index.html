@@ -127,7 +127,7 @@
                 <div class="row">
                   <div class="col-md-6">
                     <p class="small mt">GITHUB</p>
-                    <p>http://github.com/sweetchipsw/</p>
+                    <p><a href="http://github.com/sweetchipsw/">Visit Github</a></p>
                   </div>
                   <div class="col-md-6">
                     <p class="small mt">BLOG</p>
@@ -141,15 +141,33 @@
             <!-- TODO PANEL -->
             <div class="col-lg-4 col-md-4 col-sm-4 mb">
               <div class="steps pn">
-                  <input id='op1' name='op1' type='checkbox'/>
-                  <label for='op1'>Bitcoin : aaaa..</label>
-                  <input id='op2' name='op2' type='checkbox'/>
-                  <label for='op2'>Ethereum : </label>
+                  <input id='op1' name='op1' type='checkbox' checked />
+                  <label for='op1'>Email : sweetchip@sweetchip.kr (DISABLED)</label>
+                  <input id='op2' name='op2' type='checkbox' checked/>
+                  <label for='op2'>Telegram : 12345678 (DISABLED)</label>
                   <input id='op3' name='op3' type='checkbox'/>
-                  <label for='op3'>Ethereum Classic : </label>
-                  <input type='submit' value='Thank you for your donation' id='submit'/>
+                  <label for='op3'>Notification : False (DISABLED)</label>
+                  <input type='submit' value='Alert Status' id='submit'/>
               </div>
             </div><!--/col-md-4 -->
+
+
+            <!-- PROFILE 02 PANEL -->
+            <div class="col-lg-4 col-md-4 col-sm-4 mb">
+              <div class="content-panel pn">
+                <div id="profile-02">
+                  <div class="user">
+                    <img src="/assets/img/friends/fr-06.jpg" class="img-circle" width="80">
+                    <h4>sweetchip</h4>
+                  </div>
+                </div>
+                <div class="pr2-social centered">
+                  <a href="#"><i class="fa fa-twitter"></i></a>
+                  <a href="#"><i class="fa fa-facebook"></i></a>
+                  <a href="#"><i class="fa fa-dribbble"></i></a>
+                </div>
+              </div><!--/panel -->
+            </div><!--/ col-md-4 -->
 
 						
 						<div class="col-md-4 mb">
@@ -234,71 +252,38 @@
                       		</p>
                       	</div>
                       </div>
-                      <!-- Fifth Action -->
-                      <div class="desc">
-                        <div class="thumb">
-                          <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        <div class="details">
-                          <p><muted>18 Hours Ago</muted><br/>
-                             <a href="#">sweetfuzz</a> New crash detected. (Fuzzer name : google_chrome)<br/>
-                          </p>
-                        </div>
-                      </div>
-                      <!-- Fifth Action -->
-                      <div class="desc">
-                        <div class="thumb">
-                          <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        <div class="details">
-                          <p><muted>18 Hours Ago</muted><br/>
-                             <a href="#">sweetfuzz</a> New crash detected. (Fuzzer name : google_chrome)<br/>
-                          </p>
-                        </div>
-                      </div>
-                      <!-- Fifth Action -->
-                      <div class="desc">
-                        <div class="thumb">
-                          <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        <div class="details">
-                          <p><muted>18 Hours Ago</muted><br/>
-                             <a href="#">sweetfuzz</a> New crash detected. (Fuzzer name : google_chrome)<br/>
-                          </p>
-                        </div>
-                      </div>
-                      <!-- Fifth Action -->
-                      <div class="desc">
-                        <div class="thumb">
-                          <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        <div class="details">
-                          <p><muted>18 Hours Ago</muted><br/>
-                             <a href="#">sweetfuzz</a> New crash detected. (Fuzzer name : google_chrome)<br/>
-                          </p>
-                        </div>
-                      </div>                      <!-- Fifth Action -->
-                      <div class="desc">
-                        <div class="thumb">
-                          <span class="badge bg-theme"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        <div class="details">
-                          <p><muted>18 Hours Ago</muted><br/>
-                             <a href="#">sweetfuzz</a> New crash detected. (Fuzzer name : google_chrome)<br/>
-                          </p>
-                        </div>
-                      </div>
+                       <!-- USERS ONLINE SECTION -->
+                      <h3>TEAM MEMBERS</h3>
+                      <!-- First Member -->
 
+                      <div class="desc">
+                        <div class="thumb">
+                          <img class="img-circle" src="/assets/img/ui-sam.jpg" width="35px" height="35px" align="">
+                        </div>
+                        <div class="details">
+                          <p><a href="#">{{userinfo.username}}</a><br/>
+                             <muted>Me</muted>
+                          </p>
+                        </div>
+                      </div>
+                      {% for user in profile|slice:":5" %}
+                      {% if user.owner.username != userinfo.username %}
+                      <div class="desc">
+                        <div class="thumb">
+                          <img class="img-circle" src="/assets/img/ui-sam.jpg" width="35px" height="35px" align="">
+                        </div>
+                        <div class="details">
+                          <p><a href="#">{{user.owner}}</a> {% if user.first_name %} ({{user.first_name}}) {% endif %} <br/>
+                             <muted>Normal User</muted>
+                          </p>
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
                         <!-- CALENDAR-->
                         <div id="calendar" class="mb">
                             <div class="panel green-panel no-margin">
-                                <div class="panel-body">Happy exploit
-                                    <div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 33%; margin-top: -50px; width: 175px;">
-                                        <div class="arrow"></div>
-                                        <h3 class="popover-title" style="disadding: none;"></h3>
-                                        <div id="date-popover-content" class="popover-content"></div>
-                                    </div>
-                                    <div id="my-calendar"></div>
+                                <div class="panel-body">Happy exploit</div>
                                 </div>
                             </div>
                         </div><!-- / calendar -->
@@ -340,42 +325,6 @@
     <!--script for this page-->
     <script src="/assets/js/sparkline-chart.js"></script>    
 	<script src="/assets/js/zabuto_calendar.js"></script>	
-	 <script type="text/javascript">
-        $(document).ready(function () {
-        var unique_id = $.gritter.add({
-            // (string | mandatory) the heading of the notification
-            title: 'Welcome to sweetmon!',
-            // (string | mandatory) the text inside the notification
-            text: 'Please visit my <a href="http://blog.sweetchip.kr/">Blog</a> and <a href="http://github.com/sweetchipsw/">GITHUB</a>',
-            // (string | optional) the image to display on the left
-            image: '/assets/img/ui-sam.jpg',
-            // (bool | optional) if you want it to fade out on its own or just sit there
-            sticky: false,
-            // (int | optional) the time you want it to be alive for before fading out
-            time: '',
-            // (string | optional) the class name you want to apply to that specific message
-            class_name: 'my-sticky-class'
-        });
-
-                var unique_id = $.gritter.add({
-            // (string | mandatory) the heading of the notification
-            title: 'New crash detected!!',
-            // (string | mandatory) the text inside the notification
-            text: 'sweetfuzz-1 found new crash. To see details, please press the button',
-            // (string | optional) the image to display on the left
-            image: '/assets/img/ui-sam.jpg',
-            // (bool | optional) if you want it to fade out on its own or just sit there
-            sticky: false,
-            // (int | optional) the time you want it to be alive for before fading out
-            time: '',
-            // (string | optional) the class name you want to apply to that specific message
-            class_name: 'my-sticky-class'
-        });
-
-        return false;
-        });
-  </script>
-
 	<script type="application/javascript">
         function myNavFunction(id) {
             $("#date-popover").hide();

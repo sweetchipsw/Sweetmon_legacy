@@ -1,5 +1,50 @@
 var Gritter = function () {
 
+    $('#add-test-email').click(function(){
+
+        $.gritter.add({
+            // (string | mandatory) the heading of the notification
+            title: 'Message sent!',
+            // (string | mandatory) the text inside the notification
+            text: 'I sent a test message to your <b>email</b>! please check your inbox.',
+            // (string | optional) the image to display on the left
+            image: '/assets/img/ui-sam.jpg',
+            // (bool | optional) if you want it to fade out on its own or just sit there
+            sticky: false,
+            // (int | optional) the time you want it to be alive for before fading out
+            time: ''
+        });
+
+        return false;
+
+    });
+
+
+    $('#add-test-telegram').click(function(){
+
+        $.gritter.add({
+            // (string | mandatory) the heading of the notification
+            title: 'Message sent!',
+            // (string | mandatory) the text inside the notification
+            text: 'I sent a test message to your <b>telegram</b>! please check your inbox.',
+            // (string | optional) the image to display on the left
+            image: '/assets/img/ui-sam.jpg',
+            // (bool | optional) if you want it to fade out on its own or just sit there
+            sticky: false,
+            // (int | optional) the time you want it to be alive for before fading out
+            time: ''
+        });
+
+        return false;
+
+    });
+
+
+
+
+
+
+
     $('#add-sticky').click(function(){
 
         var unique_id = $.gritter.add({
