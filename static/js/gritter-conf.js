@@ -40,11 +40,6 @@ var Gritter = function () {
     });
 
 
-
-
-
-
-
     $('#add-sticky').click(function(){
 
         var unique_id = $.gritter.add({
