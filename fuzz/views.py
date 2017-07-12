@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 from django.utils.crypto import get_random_string
 from django.conf import settings
-# from telealert import *
+from . import telealert
 
 def CheckPostVariable(POST, parameter):
 	for param in parameter:
@@ -267,4 +267,64 @@ def downloadFileByToken(request):
 	f.close()
 
 	return response 
+
+def SendMsgViaTelegramByUid(request, message):
+
+	result = False
+
+	try:
+		profile = Profile.objects.get(owner=request.user)
+	except ObjectDoesNotExist:
+		raise Http404
+
+	# API Key of telegram bot
+	apikey = profile.telegram.telegram_bot_key;
+	target_id = profile.telegram_chatid;
+
+	result = telealert.send_message(apikey, target_id, message)
+
+	return result
+
+
+def SendMsgViaEmailByUid(request, message):
+	result = False
+
+	try:
+		profile = Profile.objects.get(owner=request.user)
+	except ObjectDoesNotExist:
+		raise Http404
+
+	# API Key of telegram bot
+	target_email = profile.email
+	try:
+		result = telealert.send_with_gmail(target_email, message)
+	except Exception as e:
+		result = False
+	return result
+
+def alert(request, test=False):
+	if request.method != 'POST':
+		raise Http404
+
+	check_auth(request)
+
+	result = False
+
+	parameterList = ['message', 'via']
+	if not CheckPostVariable(request.POST, parameterList):
+		raise Http404
+
+	message = request.POST['message']
+
+	if test == True:
+		message = "This is test message."
+	via = request.POST['via']
+
+	if via == "telegram":
+		result = SendMsgViaTelegramByUid(request, message)
+	elif via == "email":
+		result = SendMsgViaEmailByUid(request, message)
+
+	return JsonResponse({"result":result})
+
 

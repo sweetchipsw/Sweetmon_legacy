@@ -65,7 +65,7 @@
                                 {% if profile.owner.username == userinfo.username %}
                                 <tr>
                                 <td>{{ profile.id }} </td>
-                                <td><b>{{profile.owner.username}} (ME)</b></td>
+                                <td><b>{{profile.owner.username}} <span class="label label-primary">ME</span></b></td>
                                 <td><b>{{profile.email}}</b></td>
                                 <td><span class="label label-success">True</span></td>
                                 <td><span class="label label-info">Access Granted</span></td>
@@ -119,9 +119,7 @@
                   </div>
                   Please check the settings.py to modify settings.
                 </form>
-
               </div><!--/showback -->
-              
 
               <!-- BASIC PROGRESS BARS -->
               <div class="showback">
@@ -142,7 +140,7 @@
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Sender Email</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">sender@zdy.kr</p>
+                          <p class="form-control-static">sender@mail.kr</p>
                       </div>
                   </div>
                   <div class="form-group">
@@ -151,7 +149,10 @@
                           <p class="form-control-static">{{myprofile.email}}</p>
                       </div>
                   </div>
-              <a id="add-test-email" class="btn btn-theme02 btn-sm" href="javascript:;">Test send</a>
+              <input type="hidden" id="add-test-email-msg" value="test message"/>
+              <input type="hidden" name="userid" value="test userid"/>
+
+              <button type="submit" name="add-test-email" id="add-test-email" class="btn btn-theme02 btn-sm">Test send</button>
               <a class="btn btn-theme03 btn-sm" href="/admin/monitor/profile/{{userinfo.id}}/change/">Modify Information</a>
                 </form>
               </div><!--/showback -->
@@ -174,7 +175,7 @@
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Bot Key</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">{{myprofile.telegram.telegram_bot_key}}</p>
+                          <p class="form-control-static">{{myprofile.telegram.telegram_bot_key|truncatechars:20}}</p>
                       </div>
                   </div>
                   <div class="form-group">
@@ -191,7 +192,10 @@
                           <p class="form-control-static">False</p>
                       </div>
                   </div>
-               <a id="add-test-telegram" class="btn btn-theme02 btn-sm" href="javascript:;">Test send</a>
+              <input type="hidden" id="add-test-tele-msg" value="test message telegram"/>
+              <input type="hidden" name="userid" value="test userid"/>
+
+              <button type="submit" name="add-test-tele" id="add-test-tele" class="btn btn-theme02 btn-sm">Test send</button>
                 <a class="btn btn-theme03 btn-sm" href="/admin/monitor/profile/{{userinfo.id}}/change/">Modify Information</a>
                 </form>
               </div><!--/showback -->
@@ -315,10 +319,36 @@
 
   <script>
       //custom select box
+       $(document).ready(function(){
+        $('#add-test-email').click(function(){
+         $.ajax({
+          url : '/fuzz/alert',
+          type: 'POST',
+          data : {via:"email",message:$('#add-test-email-msg').attr('value'), "csrfmiddlewaretoken": "{{ csrf_token }}"},
+          success:function(data){
+              alert("success")
+          }
+         });
+        });
+        return false;
 
-      $(function(){
-          $('select.styled').customSelect();
-      });
+       });
+
+      //custom select box
+       $(document).ready(function(){
+        $('#add-test-tele').click(function(){
+         $.ajax({
+          url : '/fuzz/alert',
+          type: 'POST',
+          data : {via:"telegram", message:$('#add-test-tele-msg').attr('value'), "csrfmiddlewaretoken": "{{ csrf_token }}"},
+          success:function(data){
+              alert("success")
+          }
+         });
+        });
+        return false;
+
+       });
 
   </script>
 

@@ -20,7 +20,7 @@ var Gritter = function () {
     });
 
 
-    $('#add-test-telegram').click(function(){
+    $('#add-test-tele').click(function(){
 
         $.gritter.add({
             // (string | mandatory) the heading of the notification
