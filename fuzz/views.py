@@ -278,8 +278,14 @@ def SendMsgViaTelegramByUid(request, message):
 		raise Http404
 
 	# API Key of telegram bot
-	apikey = profile.telegram.telegram_bot_key;
-	target_id = profile.telegram_chatid;
+	try:
+		apikey = profile.telegram.telegram_bot_key;
+		target_id = profile.telegram_chatid;
+	except AttributeError as e:
+		return False
+
+	if apikey == "" or target_id == "" or message == "":
+		return False
 
 	result = telealert.send_message(apikey, target_id, message)
 
@@ -292,10 +298,15 @@ def SendMsgViaEmailByUid(request, message):
 	try:
 		profile = Profile.objects.get(owner=request.user)
 	except ObjectDoesNotExist:
-		raise Http404
+		result = False
+		return result
 
-	# API Key of telegram bot
 	target_email = profile.email
+	if target_email == "" or message == "":
+		return False
+
+
+
 	try:
 		result = telealert.send_with_gmail(target_email, message)
 	except Exception as e:
@@ -315,16 +326,24 @@ def alert(request, test=False):
 		raise Http404
 
 	message = request.POST['message']
-
+	error = None
 	if test == True:
 		message = "This is test message."
 	via = request.POST['via']
 
 	if via == "telegram":
 		result = SendMsgViaTelegramByUid(request, message)
+		if result == False:
+			error = "Please check your telegram settings."
 	elif via == "email":
 		result = SendMsgViaEmailByUid(request, message)
+		if result == False:
+			error = "Please check your email settings."
+	return JsonResponse({"result":result, "error":error})
 
-	return JsonResponse({"result":result})
+def alert_test(request):
+	return alert(request, test=True)
+
+
 
 

@@ -1,12 +1,92 @@
 var Gritter = function () {
 
-    $('#add-test-email').click(function(){
+     //custom select box
+       $(document).ready(function(){
+        $('#add-test-email').click(function(){
+         $.ajax({
+          url : '/fuzz/alert_test',
+          type: 'POST',
+          data : {via:"email",message:$('#add-test-email-msg').attr('value'), "csrfmiddlewaretoken": "{{ csrf_token }}"},
+          success:function(data){
 
-        $.gritter.add({
+            if (data['result'] == true)
+            {
+
+              $.gritter.add({
+                // (string | mandatory) the heading of the notification
+                title: 'Message sent!',
+                // (string | mandatory) the text inside the notification
+                text: 'I sent a test message to your <b>telegram</b>! please check your inbox.',
+                // (string | optional) the image to display on the left
+                image: '/assets/img/ui-sam.jpg',
+                // (bool | optional) if you want it to fade out on its own or just sit there
+                sticky: false,
+                // (int | optional) the time you want it to be alive for before fading out
+                time: ''
+              })
+
+            }
+            else
+            {
+              message = "Failed to send message. "+data["error"];
+              alert(message);
+            }
+
+
+          }
+         });
+        });
+        return false;
+
+       });
+
+      //custom select box
+       $(document).ready(function(){
+        $('#add-test-tele').click(function(){
+
+         $.ajax({
+          url : '/fuzz/alert_test',
+          type: 'POST',
+          data : {via:"telegram", message:$('#add-test-tele-msg').attr('value'), "csrfmiddlewaretoken": "{{ csrf_token }}"},
+          success:function(data){
+            if (data['result'] == true)
+            {
+
+              $.gritter.add({
+                // (string | mandatory) the heading of the notification
+                title: 'Message sent!',
+                // (string | mandatory) the text inside the notification
+                text: 'I sent a test message to your <b>telegram</b>! please check your inbox.',
+                // (string | optional) the image to display on the left
+                image: '/assets/img/ui-sam.jpg',
+                // (bool | optional) if you want it to fade out on its own or just sit there
+                sticky: false,
+                // (int | optional) the time you want it to be alive for before fading out
+                time: ''
+              })
+
+            }
+            else
+            {
+              message = "Failed to send message. "+data["error"];
+              alert(message);
+            }
+          }
+         });
+        });
+        return false;
+
+       });
+
+
+
+    $('#copy-otu').click(function(){
+
+        var unique_id = $.gritter.add({
             // (string | mandatory) the heading of the notification
-            title: 'Message sent!',
+            title: 'URL Copied',
             // (string | mandatory) the text inside the notification
-            text: 'I sent a test message to your <b>email</b>! please check your inbox.',
+            text: 'URL copied successfully',
             // (string | optional) the image to display on the left
             image: '/assets/img/ui-sam.jpg',
             // (bool | optional) if you want it to fade out on its own or just sit there
@@ -14,30 +94,11 @@ var Gritter = function () {
             // (int | optional) the time you want it to be alive for before fading out
             time: ''
         });
-
         return false;
 
     });
 
 
-    $('#add-test-tele').click(function(){
-
-        $.gritter.add({
-            // (string | mandatory) the heading of the notification
-            title: 'Message sent!',
-            // (string | mandatory) the text inside the notification
-            text: 'I sent a test message to your <b>telegram</b>! please check your inbox.',
-            // (string | optional) the image to display on the left
-            image: '/assets/img/ui-sam.jpg',
-            // (bool | optional) if you want it to fade out on its own or just sit there
-            sticky: false,
-            // (int | optional) the time you want it to be alive for before fading out
-            time: ''
-        });
-
-        return false;
-
-    });
 
 
     $('#add-sticky').click(function(){

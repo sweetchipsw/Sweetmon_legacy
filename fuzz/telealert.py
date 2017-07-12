@@ -18,29 +18,32 @@ SENDER_PW = settings.SMTP_INFO["SMTP_PW"]
 
 
 def send_with_gmail(to_addr, body):
-    gmail_user = SENDER_ID
-    gmail_pw = SENDER_PW
+	if MAIL_SERVER == "" or MAIL_PORT == "" or SENDER_ID == "" or SENDER_PW == "":
+		return False
 
-    msg = MIMEMultipart('alternative')
-    msg['From'] = "SWEETMON_ALERT"
-    msg['To'] = to_addr
-    msg['Subject'] = 'New Crash Detected!!'
-    msg.attach(MIMEText(body, 'plain', 'utf-8'))
+	gmail_user = SENDER_ID
+	gmail_pw = SENDER_PW
 
-    try:
-        server = smtplib.SMTP(MAIL_SERVER, MAIL_PORT)
-        server.ehlo()
-        server.starttls()
-        server.login(SENDER_ID, SENDER_PW)
-        server.sendmail(msg['From'], to_addr, msg.as_string())
-        server.quit()
-        return True
+	msg = MIMEMultipart('alternative')
+	msg['From'] = "SWEETMON_ALERT"
+	msg['To'] = to_addr
+	msg['Subject'] = 'New Crash Detected!!'
+	msg.attach(MIMEText(body, 'plain', 'utf-8'))
 
-    except BaseException as e:
-        print("failed to send mail", str(e))
-        return False
+	try:
+		server = smtplib.SMTP(MAIL_SERVER, MAIL_PORT)
+		server.ehlo()
+		server.starttls()
+		server.login(SENDER_ID, SENDER_PW)
+		server.sendmail(msg['From'], to_addr, msg.as_string())
+		server.quit()
+		return True
 
-    return False
+	except BaseException as e:
+		print("failed to send mail", str(e))
+		return False
+
+	return False
 
 def send_message(sender_id, target_id, text):
 	result = False

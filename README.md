@@ -21,14 +21,15 @@ You should use sweetmon-client to interact with server. Please check sweetmon-cl
 - Environment
   - Ubuntu 16.04.2 LTS (Server)
   - Python3
-  - Django 1.11
+  - Django 1.18
 
 1. Install python + django + apache2
 
    ```shell
    sudo apt-get install python3
    sudo apt-get install apache2
-   sudo pip install django
+   sudo pip3 install django
+   sudo pip3 install requests
    ```
 
 2. Set wsgi
@@ -53,7 +54,7 @@ Please check this page.
 
 
 
-# Function
+# Features
 
 Sweetmon provides several functions for monitoring fuzzers and crashes.
 

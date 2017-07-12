@@ -98,7 +98,7 @@ def settings_page(request):
 
 	profile = Profile.objects.all()
 	myprofile = Profile.objects.get(owner=request.user)
-	notification_setting = {'USE_EMAIL_ALERT':settings.USE_EMAIL_ALERT,'USE_TELEGRAM_ALERT':settings.USE_TELEGRAM_ALERT}
+	notification_setting = {'USE_EMAIL_ALERT':settings.USE_EMAIL_ALERT,'USE_TELEGRAM_ALERT':settings.USE_TELEGRAM_ALERT, 'EMAIL_SENDER':settings.SMTP_INFO["SMTP_ID"]}
 	context = {'testcase_count':testcase_count, 'server_count':server_count, 'cve_count':cve_count,'issue_count':issue_count, 'crash_count': crash_count, 'machine_count': machine_count,'userinfo':request.user, 'profiles':profile, 'myprofile':myprofile, 'notification_setting':notification_setting}
 	return render(request, 'settings.html', context)
 

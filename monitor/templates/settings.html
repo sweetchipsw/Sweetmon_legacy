@@ -95,7 +95,7 @@
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Use Email Alert</label>
-                      {% if notification_setting.USE_EMAIL_ALERT %}
+                      {% if not notification_setting.USE_EMAIL_ALERT %}
                       <div class="col-lg-10">
                           <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
                       </div>
@@ -107,7 +107,7 @@
                   </div>
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Use Telegram Alert</label>
-                      {% if notification_setting.USE_TELEGRAM_ALERT %}
+                      {% if not notification_setting.USE_TELEGRAM_ALERT %}
                       <div class="col-lg-10">
                           <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
                       </div>
@@ -124,7 +124,7 @@
               <!-- BASIC PROGRESS BARS -->
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> Email Notification
-                  {% if notification_setting.USE_EMAIL_ALERT %}
+                  {% if not notification_setting.USE_EMAIL_ALERT %}
                   <span class="label label-danger">DISABLED</span>
                   {% else %}
                   <span class="label label-success">ENABLED</span>
@@ -140,7 +140,7 @@
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Sender Email</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">sender@mail.kr</p>
+                          <p class="form-control-static">{{notification_setting.EMAIL_SENDER}}</p>
                       </div>
                   </div>
                   <div class="form-group">
@@ -152,14 +152,14 @@
               <input type="hidden" id="add-test-email-msg" value="test message"/>
               <input type="hidden" name="userid" value="test userid"/>
 
-              <button type="submit" name="add-test-email" id="add-test-email" class="btn btn-theme02 btn-sm">Test send</button>
+              <a name="add-test-email" id="add-test-email" class="btn btn-theme02 btn-sm">Test send</a>
               <a class="btn btn-theme03 btn-sm" href="/admin/monitor/profile/{{userinfo.id}}/change/">Modify Information</a>
                 </form>
               </div><!--/showback -->
 
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> Telegram Notification
-                {% if notification_setting.USE_TELEGRAM_ALERT %}
+                {% if not notification_setting.USE_TELEGRAM_ALERT %}
                   <span class="label label-danger">DISABLED</span>
                   {% else %}
                   <span class="label label-success">ENABLED</span>
@@ -195,7 +195,7 @@
               <input type="hidden" id="add-test-tele-msg" value="test message telegram"/>
               <input type="hidden" name="userid" value="test userid"/>
 
-              <button type="submit" name="add-test-tele" id="add-test-tele" class="btn btn-theme02 btn-sm">Test send</button>
+              <a name="add-test-tele" id="add-test-tele" class="btn btn-theme02 btn-sm">Test send</a>
                 <a class="btn btn-theme03 btn-sm" href="/admin/monitor/profile/{{userinfo.id}}/change/">Modify Information</a>
                 </form>
               </div><!--/showback -->
@@ -318,38 +318,7 @@
     
 
   <script>
-      //custom select box
-       $(document).ready(function(){
-        $('#add-test-email').click(function(){
-         $.ajax({
-          url : '/fuzz/alert',
-          type: 'POST',
-          data : {via:"email",message:$('#add-test-email-msg').attr('value'), "csrfmiddlewaretoken": "{{ csrf_token }}"},
-          success:function(data){
-              alert("success")
-          }
-         });
-        });
-        return false;
-
-       });
-
-      //custom select box
-       $(document).ready(function(){
-        $('#add-test-tele').click(function(){
-         $.ajax({
-          url : '/fuzz/alert',
-          type: 'POST',
-          data : {via:"telegram", message:$('#add-test-tele-msg').attr('value'), "csrfmiddlewaretoken": "{{ csrf_token }}"},
-          success:function(data){
-              alert("success")
-          }
-         });
-        });
-        return false;
-
-       });
-
+  // gritter-conf.js
   </script>
 
   </body>
