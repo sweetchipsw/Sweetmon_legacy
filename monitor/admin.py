@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
-from monitor.models import Profile, Machine, Crash, Testcase, Issue, OnetimeToken, TelegramBot
+from monitor.models import Profile, Machine, Crash, Testcase, Issue, OnetimeToken, TelegramBot, EmailBot
 from django.db.models import Q
 
 def get_all_field_names(Model):
@@ -115,6 +115,33 @@ admin.site.register(Issue, IssueAdmin)
 class OnetimeTokenAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(OnetimeToken)
 admin.site.register(OnetimeToken, OnetimeTokenAdmin)
+
+class EmailBotAdmin(admin.ModelAdmin):
+	list_display = get_all_field_names(EmailBot)
+	# exceptfield(list_display, )
+
+	def profile(self, obj):
+		return len(Profile.objects.filter(telegram=obj))
+
+	def get_queryset(self, request):
+		fields = super(self.__class__, self).get_queryset(request)
+		fields = fields.filter(Q(owner_id=request.user) | Q(is_public=True))
+		return fields
+
+	def get_fieldsets(self, request, obj=None):
+		fields = super(self.__class__, self).get_fieldsets(request, obj)
+		fields[0][1]['fields'].remove('owner') # Hide field
+		return fields
+
+	def save_model(self, request, instance, form, change):
+		user = request.user 
+		instance = form.save(commit=False)
+		if not change or not instance.owner:
+			instance.owner = user # set owner
+		instance.save()
+		form.save_m2m()
+		return instance
+admin.site.register(EmailBot, EmailBotAdmin)
 
 class TelegramBotAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(TelegramBot)

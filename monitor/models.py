@@ -7,6 +7,9 @@ from django.db.models.signals import pre_save, post_save
 import hashlib
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin, User
 import binascii
+import base64
+from Crypto import Random
+from Crypto.Cipher import AES
 
 ###############################################################################
 # Storage
@@ -16,8 +19,12 @@ fuzzerStorage = FileSystemStorage(location=settings.FUZZER_STORAGE_ROOT)
 testcaseStorage = FileSystemStorage(location=settings.TESTCASE_STORAGE_ROOT)
 userimageStorage = FileSystemStorage(location=settings.USERIMAGE_STORAGE_ROOT)
 
-def getSha256text(plain):
-	h = hashlib.sha256(plain).hexdigest()
+def getSha256text(plain, convtohex=True):
+	h = hashlib.sha256(plain)
+	if convtohex == True:
+		h = h.hexdigest()
+	else:
+		h = h.digest()
 	return h
 
 
@@ -27,20 +34,17 @@ def getUploadPath(instance, filename):
 def getimageUploadPath(instance, filename):
 	return '{0}.jpg'.format( getSha256text(str(os.urandom(32)).encode('utf-8')) )
 
-# Fuzzing machine model
 class Machine(models.Model):
+	owner = models.ForeignKey(User, default=1)
+
 	fuzzer_name = models.CharField(max_length=50)
 	target = models.CharField(max_length=200)
-	owner = models.ForeignKey(User, default=1)
 	crash_count = models.IntegerField(default=0)
 	testcase = models.IntegerField(default=0)
 	ping = models.DateTimeField(blank=True, auto_now=True)
 	reg_date = models.DateTimeField(default=datetime.now, blank=True)
-	#regist_date = models.DateTimeField(default=datetime.now, blank=True)
 	pub_ip = models.CharField(max_length=16)
-	#public_ip = models.CharField(max_length=16)
 	pri_ip = models.CharField(max_length=16)
-	#private_ip = models.CharField(max_length=16)
 	token = models.CharField(max_length=100)
 
 	def __str__(obj):
@@ -51,14 +55,7 @@ class Crash(models.Model):
 	owner = models.ForeignKey(User)
 	fuzzer = models.ForeignKey(Machine, null=True, blank=True)
 
-	title = models.CharField(max_length=1000)
-
-	#DEPRECATED
-	# target = models.CharField(max_length=200)
-	# fuzzer_name = models.CharField(max_length=50)
-	# link = models.CharField(max_length=1000)
-	# reproducible = models.BooleanField(default=True)
-	
+	title = models.CharField(max_length=1000)	
 	crash_hash = models.CharField(max_length=100)
 	crashlog = models.CharField(max_length=6553500)
 	dup_crash = models.IntegerField(default=0)
@@ -68,15 +65,13 @@ class Crash(models.Model):
 	comment = models.CharField(max_length=100000, null=True, blank=True)
 	is_encrypted = models.BooleanField(default=False)
 
-	# DEPRECATED
-	#isopen = models.BooleanField(default=True) # Deprecated
-	#crash_size = models.IntegerField(default=0) # Deprecated
-
 	def __str__(obj):
 		return "%s" % (obj.title)
 
 
 class Testcase(models.Model):
+	owner = models.ForeignKey(User)
+
 	title = models.CharField(max_length=200)
 	fuzzerName = models.CharField(max_length=200)
 	binaryName = models.CharField(max_length=200)
@@ -86,16 +81,14 @@ class Testcase(models.Model):
 	fuzzer_url = models.CharField(max_length=1024, blank=True, null=True)
 	fuzzerFile = models.FileField(storage=fuzzerStorage, blank=True)
 	testcaseFile = models.FileField(storage=testcaseStorage, blank=True)
-	owner = models.ForeignKey(User)
-
-	# DEPRECATED
-	#testcase_size = models.IntegerField(default=0) # Deprecated
 
 	def __str__(obj):
 		return "%s" % (obj.title)
 
 
 class Issue(models.Model):
+	owner = models.ForeignKey(User)
+
 	title = models.CharField(max_length=200)
 	description = models.TextField(max_length=1024)
 	link = models.CharField(max_length=1024)
@@ -103,7 +96,6 @@ class Issue(models.Model):
 	cve = models.CharField(max_length=200, blank=True, null=True)
 	etc_numbering = models.CharField(max_length=200, blank=True, null=True)
 	reward = models.IntegerField(default=0)
-	owner = models.ForeignKey(User)
 
 	def __str__(obj):
 		return "%s" % (obj.title)
@@ -114,13 +106,16 @@ class OnetimeToken(models.Model):
 	is_expired = models.BooleanField(default=False)
 	owner = models.ForeignKey(User)
 
-# class EmailBot(models.Model):
-	# owner = models.ForeignKey(User)
-	# email_id = models.CharField(max_length=512)
-	# email_pw = models.CharField(max_length=512, help_text="Note that, password can be decrypted. Please change this ")
-	# smtp_server = models.CharField(max_length=512)
-	# smtp_port = models.CharField(max_length=5)
+class EmailBot(models.Model):
+	owner = models.ForeignKey(User)
+	email_id = models.CharField(max_length=512)
+	email_pw = models.CharField(max_length=512, help_text="Note that, password can be decrypted when login to smtp server. So don't use your password.", blank=True, null=True)
+	smtp_server = models.CharField(max_length=512)
+	smtp_port = models.CharField(max_length=5)
+	is_public = models.BooleanField(default=False, help_text="Check true if you want to share this email")
 
+	def __str__(obj):
+		return "%s" % (obj.email_id)
 
 class TelegramBot(models.Model):
 	telegram_bot_name = models.CharField(max_length=512)
@@ -140,27 +135,53 @@ class Profile(models.Model):
 	last_name = models.CharField(max_length=512, null=True, blank=True)
 	first_name = models.CharField(max_length=512, null=True, blank=True)
 	email = models.EmailField(max_length=512, null=True, blank=True)
-	# test_email = models.BooleanField(default=False, help_text="Please check if you want to test email alert.")
-	telegram_chatid = models.CharField(max_length=12,null=True, blank=True, help_text="To get your chat_id, Add '@get_id_bot' and send '/my_id'")
-	# test_telegram = models.BooleanField(default=False, help_text="Please check if you want to test telegram alert.")
-	##
-
 	profile_image = models.FileField(storage=userimageStorage, null=True, blank=True, upload_to=getimageUploadPath)
-	userkey = models.TextField(null=True, blank=True, help_text="Use this key when you regist the new fuzzer.")
+
 	telegram = models.ForeignKey(TelegramBot, null=True, blank=True)
+	telegram_chatid = models.CharField(max_length=12,null=True, blank=True, help_text="To get your chat_id, Add '@get_id_bot' and send '/my_id'")
 	public_key = models.TextField(max_length=10000, blank=True, null=True, help_text="You should fill out this field to use file encryption.")
+
 	use_telegram_alert = models.BooleanField(default=False, help_text="You should fill out telegram_chatid to use this feature.")
 	use_email_alert = models.BooleanField(default=False, help_text="You should fill out email of your profile to use this feature.")
-	# use_encryption = models.BooleanField(default=False, help_text="DEPRECATED FEATURE")
+
+	userkey = models.TextField(null=True, blank=True, help_text="Use this key when you regist the new fuzzer.")
 
 	def __str__(obj):
 		return "%s" % (obj.owner)
 
 
+BS = 16
+pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS).encode()
+unpad = lambda s: s[:-ord(s[len(s)-1:])]
 
-def problem_hash_check_pre_save(sender, **kwargs):
+class AESCipher(object):
+	def __init__(self, key):
+		self.key = key
+
+	def iv(self):
+		return "\x00" * 16 
+
+	def encrypt(self, message):
+		message = message.encode()
+		raw = pad(message)
+		cipher = AES.new(self.key, AES.MODE_CBC, self.iv())
+		enc = cipher.encrypt(raw)
+		return base64.b64encode(enc).decode('utf-8')
+
+	def decrypt(self, enc):
+		enc = base64.b64decode(enc)
+		cipher = AES.new(self.key, AES.MODE_CBC, self.iv())
+		dec = cipher.decrypt(enc)
+		return unpad(dec).decode('utf-8')
+
+def EncryptEmailPassword(sender, **kwargs):
 	obj = kwargs.get('instance', None)
-	obj.password = getSha256text("th1s1ss0rt"+obj.password)
+	print(kwargs)
+	key = getSha256text((obj.owner.username +settings.SECRET_KEY + obj.owner.username).encode('utf-8'), False)
+	enc = AESCipher(key).encrypt(obj.email_pw)
+	dec = AESCipher(key).decrypt(enc)
+
+	obj.email_pw = enc
 
 def create_profile(sender, **kwargs):
 	# Gen userkey
@@ -180,25 +201,19 @@ def create_profile(sender, **kwargs):
 		user.is_staff = True;
 		user.save()
 
-		# print("created")
-	# print("hit")
-
 def SyncUserProfile(sender, **kwargs):
 	# Gen userkey
 	profile = kwargs["instance"]
-	# print(kwargs)
 	if not kwargs["created"]:
-		# Create user
 		print(profile.owner.id)
 		user_profile = User.objects.get(id=profile.owner.id)
 		user_profile.email = profile.email
 		user_profile.last_name = profile.last_name
 		user_profile.first_name = profile.first_name
 		user_profile.save()
-		# print("modified")
-	# print("hit sync")
 
 post_save.connect(create_profile, sender=User)
 post_save.connect(SyncUserProfile, sender=Profile)
 # pre_save.connect(problem_hash_check_pre_save, sender=AuthInformation)
+post_save.connect(EncryptEmailPassword, sender=EmailBot)
 
