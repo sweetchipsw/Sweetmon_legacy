@@ -34,7 +34,7 @@
                 <input id="id_password" class="form-control" placeholder="Password" name="password" type="password" />
 		            <label class="checkbox">
 		            </label>
-		            <button class="btn btn-theme btn-block" href="index.html" type="submit"><i class="fa fa-lock"></i> SIGN IN</button>
+		            <button class="btn btn-theme02 btn-block" href="index.html" type="submit"><i class="fa fa-lock"></i> SIGN IN</button>
 		        </div>
 		      </form>	  	
 	  	</div>
@@ -47,11 +47,14 @@
 
     <!--BACKSTRETCH-->
     <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+    <div style="opacity: 0.1">
     <script type="text/javascript" src="/assets/js/jquery.backstretch.min.js"></script>
     <script>
-        $.backstretch(["/assets/img/login-bg.jpg", "/assets/img/login-bg1.jpg"], {duration: 3000, fade: 750});
+    //"/assets/img/login-bg.jpg", 
+        $.backstretch(["/assets/img/login-bg1.jpg"], {duration: 3000, fade: 750, opacity:0.5});
     </script>
-
+    </div>
+    
 
   </body>
 </html>
