@@ -32,7 +32,7 @@ class Machine(models.Model):
 	fuzzer_name = models.CharField(max_length=50)
 	target = models.CharField(max_length=200)
 	owner = models.ForeignKey(User, default=1)
-	crash = models.IntegerField(default=0)
+	crash_count = models.IntegerField(default=0)
 	testcase = models.IntegerField(default=0)
 	ping = models.DateTimeField(blank=True, auto_now=True)
 	reg_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -48,19 +48,24 @@ class Machine(models.Model):
 
 
 class Crash(models.Model):
+	owner = models.ForeignKey(User)
+	fuzzer = models.ForeignKey(Machine, null=True, blank=True)
+
 	title = models.CharField(max_length=1000)
-	target = models.CharField(max_length=200)
-	fuzzer_name = models.CharField(max_length=50)
+
+	#DEPRECATED
+	# target = models.CharField(max_length=200)
+	# fuzzer_name = models.CharField(max_length=50)
+	# link = models.CharField(max_length=1000)
+	# reproducible = models.BooleanField(default=True)
+	
 	crash_hash = models.CharField(max_length=100)
-	link = models.CharField(max_length=1000)
 	crashlog = models.CharField(max_length=6553500)
 	dup_crash = models.IntegerField(default=0)
-	reproducable = models.BooleanField(default=True)
 	crash_file = models.FileField(storage=private_storage, upload_to=getUploadPath)
 	reg_date = models.DateTimeField(default=datetime.now, blank=True) # first date
 	latest_date = models.DateTimeField(auto_now=True)
-	comment = models.CharField(max_length=100000)
-	owner = models.ForeignKey(User)
+	comment = models.CharField(max_length=100000, null=True, blank=True)
 	is_encrypted = models.BooleanField(default=False)
 
 	# DEPRECATED
@@ -103,22 +108,18 @@ class Issue(models.Model):
 	def __str__(obj):
 		return "%s" % (obj.title)
 
-
-# class AuthInformation(models.Model):
-# 	name = models.CharField(max_length=256)
-# 	password = models.CharField(max_length=256)
-# 	do_hash = models.BooleanField(default=True)
-# 	owner = models.ForeignKey(User)
-
-# 	def __str__(obj):
-# 		return "%s" % (obj.name)
-
-
 class OnetimeToken(models.Model):
 	token = models.CharField(max_length=512)
 	real_path = models.CharField(max_length=5120)
 	is_expired = models.BooleanField(default=False)
 	owner = models.ForeignKey(User)
+
+# class EmailBot(models.Model):
+	# owner = models.ForeignKey(User)
+	# email_id = models.CharField(max_length=512)
+	# email_pw = models.CharField(max_length=512, help_text="Note that, password can be decrypted. Please change this ")
+	# smtp_server = models.CharField(max_length=512)
+	# smtp_port = models.CharField(max_length=5)
 
 
 class TelegramBot(models.Model):
@@ -139,15 +140,15 @@ class Profile(models.Model):
 	last_name = models.CharField(max_length=512, null=True, blank=True)
 	first_name = models.CharField(max_length=512, null=True, blank=True)
 	email = models.EmailField(max_length=512, null=True, blank=True)
-	test_email = models.BooleanField(default=False, help_text="Please check if you want to test email alert.")
+	# test_email = models.BooleanField(default=False, help_text="Please check if you want to test email alert.")
 	telegram_chatid = models.CharField(max_length=12,null=True, blank=True, help_text="To get your chat_id, Add '@get_id_bot' and send '/my_id'")
-	test_telegram = models.BooleanField(default=False, help_text="Please check if you want to test telegram alert.")
+	# test_telegram = models.BooleanField(default=False, help_text="Please check if you want to test telegram alert.")
 	##
 
 	profile_image = models.FileField(storage=userimageStorage, null=True, blank=True, upload_to=getimageUploadPath)
-	userkey = models.TextField(null=True, blank=True)
+	userkey = models.TextField(null=True, blank=True, help_text="Use this key when you regist the new fuzzer.")
 	telegram = models.ForeignKey(TelegramBot, null=True, blank=True)
-	public_key = models.TextField(max_length=10000, blank=True, null=True)
+	public_key = models.TextField(max_length=10000, blank=True, null=True, help_text="You should fill out this field to use file encryption.")
 	use_telegram_alert = models.BooleanField(default=False, help_text="You should fill out telegram_chatid to use this feature.")
 	use_email_alert = models.BooleanField(default=False, help_text="You should fill out email of your profile to use this feature.")
 	# use_encryption = models.BooleanField(default=False, help_text="DEPRECATED FEATURE")

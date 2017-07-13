@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.conf import settings
 from monitor.models import Profile, Machine, Crash, Testcase, Issue, OnetimeToken, TelegramBot
 from django.db.models import Q
+
 def get_all_field_names(Model):
 	return [f.name for f in Model._meta.get_fields()]
 
@@ -14,6 +15,8 @@ def exceptfield(list_display, fields=[]):
 
 class MachineAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(Machine)
+
+	readonly_fields = ('crash_count', 'testcase', 'reg_date', 'pub_ip', 'pri_ip', 'token')
 
 	def get_queryset(self, request):
 		fields = super(self.__class__, self).get_queryset(request)
@@ -36,7 +39,7 @@ admin.site.register(Machine, MachineAdmin)
 
 class CrashAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(Crash)
-	exceptfield(list_display,["crashlog", "comment", "link", "crash_file", "crash_hash"])
+	exceptfield(list_display,["crashlog", "comment", "crash_file", "crash_hash"])
 	def get_queryset(self, request):
 		fields = super(self.__class__, self).get_queryset(request)
 		fields = fields.filter(owner_id=request.user)
@@ -45,6 +48,7 @@ class CrashAdmin(admin.ModelAdmin):
 	def get_fieldsets(self, request, obj=None):
 		fields = super(self.__class__, self).get_fieldsets(request, obj)
 		fields[0][1]['fields'].remove('owner') # Hide field
+		fields[0][1]['fields'].remove('fuzzer') # Hide field
 		return fields
 	def save_model(self, request, instance, form, change):
 		user = request.user 

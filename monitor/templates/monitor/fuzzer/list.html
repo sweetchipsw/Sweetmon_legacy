@@ -11,6 +11,7 @@
     <!-- Custom styles for this template -->
     <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/style-responsive.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="/assets/favicon.ico"/>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -72,7 +73,7 @@
                                 <td><span class="label label-warning">Not Working</span></td>
                                 {% endif %}
                                 <td><span class="label label-warning">{{machine.testcase}} Testcases</span></td>
-                                <td><span class="label label-info">{{machine.crash}} Crashes</span></td>
+                                <td><span class="label label-info">{{machine.crash_count}} Crashes</span></td>
                                 </tr>
                                 {% endfor %}
                               {% endif %}

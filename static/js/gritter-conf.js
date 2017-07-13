@@ -16,7 +16,7 @@ var Gritter = function () {
                 // (string | mandatory) the heading of the notification
                 title: 'Message sent!',
                 // (string | mandatory) the text inside the notification
-                text: 'I sent a test message to your <b>telegram</b>! please check your inbox.',
+                text: 'I sent an email to you! please check your inbox.',
                 // (string | optional) the image to display on the left
                 image: '/assets/img/ui-sam.jpg',
                 // (bool | optional) if you want it to fade out on its own or just sit there

@@ -96,16 +96,22 @@ def status(request):
 
 def crash(request):
 
+	# Check POST
 	if request.method != 'POST':
 		raise Http404
+
+	# Check Parameter
 	parameterList = ['token', 'crashlog', 'title']
 	if not CheckPostVariable(request.POST, parameterList):
 		raise Http404
 
+	# Get Parameters
 	token = request.POST['token']
 	crashlog = request.POST['crashlog']
 	title = request.POST['title']
 
+
+	# Get fuzzer information by token
 	fuzzer = None
 	try:
 		fuzzer = Machine.objects.get(token=token)
@@ -115,8 +121,10 @@ def crash(request):
 	target = fuzzer.target
 	fuzzer_name = fuzzer.fuzzer_name
 
+	# Generate hash by title
 	crash_hash = hashlib.sha1(title.encode("utf-8")).hexdigest()
 	
+	# Check if crash already exists
 	Icrash = None
 	dup_flag = False
 
@@ -126,10 +134,13 @@ def crash(request):
 	except ObjectDoesNotExist:
 		dup_flag = False
 
-	fuzzer.crash = fuzzer.crash + 1
+	# Add 1 to crash count.
+	fuzzer.crash_count = fuzzer.crash_count + 1
 	fuzzer.save()
 
+
 	if dup_flag == True:
+		# If duplicate crash
 		# we need to save dup crash
 		dup_count = Icrash.dup_crash + 1
 		Icrash.dup_crash = dup_count
@@ -139,6 +150,7 @@ def crash(request):
 		parent_name = Icrash.crash_file.name
 		p_dir = settings.CRASH_STORAGE_ROOT+parent_name.split("/")[0] # get parent crash dir 
 
+		# Save crash name as 1, 2, 3, ...
 		f = open(p_dir+"/"+str(dup_count), "wb") # save new crash into parent's dir (hash/num)
 		for chunk in crashfile.chunks():
 			f.write(chunk)
@@ -152,7 +164,7 @@ def crash(request):
 		crashfile.name = hashlib.sha1((crashfile.name+get_random_string(300)).encode("utf-8")).hexdigest()
 		# crash_size = crashfile.size
 		link = crashfile.name
-		new_crash = Crash(owner=fuzzer.owner, crash_hash=crash_hash, fuzzer_name=fuzzer_name, target=target, link=link, title=title, crashlog=crashlog, comment="", crash_file=crashfile)
+		new_crash = Crash(owner=fuzzer.owner, fuzzer=fuzzer, crash_hash=crash_hash, title=title, crashlog=crashlog, crash_file=crashfile)
 		new_crash.save()
 
 
