@@ -175,19 +175,18 @@ class AESCipher(object):
 		return unpad(dec).decode('utf-8')
 
 def EncryptEmailPassword(sender, **kwargs):
-	obj = kwargs.get('instance', None)
-	print(kwargs)
-	key = getSha256text((obj.owner.username +settings.SECRET_KEY + obj.owner.username).encode('utf-8'), False)
-	enc = AESCipher(key).encrypt(obj.email_pw)
-	dec = AESCipher(key).decrypt(enc)
-
-	obj.email_pw = enc
+	obj = kwargs["instance"]
+	if kwargs["created"]:
+		key = getSha256text((obj.owner.username +settings.SECRET_KEY + obj.owner.username).encode('utf-8'), False)
+		enc = AESCipher(key).encrypt(obj.email_pw)
+		dec = AESCipher(key).decrypt(enc)
+		obj.email_pw = enc
+		obj.save()
 
 def create_profile(sender, **kwargs):
 	# Gen userkey
 	userkey = getSha256text( str(os.urandom(32)).encode('utf-8') )
 	user = kwargs["instance"]
-	# print(kwargs, userkey, user)
 	if kwargs["created"]:
 		# Create user
 		user_profile = Profile(owner=user, userkey=userkey)
