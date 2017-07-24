@@ -31,8 +31,10 @@ def getSha256text(plain, convtohex=True):
 def getUploadPath(instance, filename):
 	return '{0}/{1}'.format(instance.crash_file.name, filename)
 
+
 def getimageUploadPath(instance, filename):
 	return '{0}.jpg'.format( getSha256text(str(os.urandom(32)).encode('utf-8')) )
+
 
 class Machine(models.Model):
 	owner = models.ForeignKey(User, default=1)

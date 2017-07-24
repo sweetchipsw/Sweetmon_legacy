@@ -15,6 +15,6 @@ urlpatterns = [
     url(r'^geturl$', views.generateToken, name='geturl'),
     url(r'^download$', views.downloadFileByToken, name='download'),
     url(r'^alert$', views.alert, name='alert'),
-    url(r'^alert_test$', views.alert_test, name='alerttest'),
+    url(r'^alert_test$', views.alert_test, name='alert_test'),
 
 ]

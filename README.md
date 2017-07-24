@@ -152,7 +152,7 @@ Sweetmon provides several functions for monitoring fuzzers and crashes.
 * ​
 
 # Directory
-- sweetmon : Monitor system (Django)​
+- sweetmon : Monitor system (Django)
 
 
 
