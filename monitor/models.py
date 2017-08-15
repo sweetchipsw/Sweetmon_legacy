@@ -70,6 +70,18 @@ class Crash(models.Model):
 	def __str__(obj):
 		return "%s" % (obj.title)
 
+class DupCrash(models.Model):
+	owner = models.ForeignKey(User)
+	original_crash = models.ForeignKey(Crash)
+	fuzzer = models.ForeignKey(Machine, null=True, blank=True)
+
+	crash_hash = models.CharField(max_length=100)
+	dup_crash = models.IntegerField(default=0)
+	crash_file = models.FileField(storage=private_storage, upload_to=getUploadPath)
+	reg_date = models.DateTimeField(default=datetime.now, blank=True) # first date
+
+	def __str__(obj):
+		return "%s" % (obj.crash_hash)
 
 class Testcase(models.Model):
 	owner = models.ForeignKey(User)

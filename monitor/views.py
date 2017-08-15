@@ -1,12 +1,17 @@
 from django.shortcuts import render,get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse
-from monitor.models import Machine, Crash, Testcase, Issue, Profile
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from monitor.models import Machine, Crash, Testcase, Issue, Profile, DupCrash
 from django.http import Http404
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.models import User
+from django.utils.timesince import timesince
+from django.template import defaultfilters
 import datetime
+import glob
+import os
+import hashlib
 
 def CheckPostVariable(POST, parameter):
 	for param in parameter:
@@ -65,6 +70,39 @@ def crash_details(request, idx):
 	    raise Http404
 	context = {'crash': crash_info, 'userinfo':request.user}
 	return render(request, 'monitor/crash/detail.html', context)
+
+def crash_details_dupcrash(request, idx, page=0):
+	check_auth(request)
+	crash_info = None
+	result = {}
+	try:
+
+		crash_info = Crash.objects.get(id=idx, owner=request.user)
+		Dcrash = DupCrash.objects.filter(owner=request.user, fuzzer=crash_info.fuzzer, original_crash=crash_info)
+
+		result["total"] = len(Dcrash)
+		for i in range(0, len(Dcrash)):
+			tmp = {}
+			tmp["size"] = defaultfilters.filesizeformat(Dcrash[i].crash_file.size)
+			tmp["hash"] = Dcrash[i].crash_hash
+			tmp["count"] = Dcrash[i].dup_crash
+			tmp["reg_date"] = defaultfilters.date(Dcrash[i].reg_date)
+			result[i+1] = tmp
+
+
+		# crash_path = crash_info.crash_file.path.split("/")[:-1]
+		# crash_path = "/".join(crash_path)
+		# crashes = (glob.glob(crash_path+"/*"))
+		# for i in range(0, len(crashes)):
+		# 	tmp = {}
+		# 	tmp["size"] = os.path.getsize(crashes[i])
+		# 	tmp["name"] = os.path.basename(crashes[i])
+		# 	tmp["hash"] = hashlib.md5(open(crashes[i],'rb').read()).hexdigest()
+		# 	result[i] = tmp
+	except ObjectDoesNotExist:
+	    raise Http404
+	return JsonResponse(result)
+
 
 def crash_details_modify(request, idx):
 	check_auth(request)

@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from monitor.models import Machine, Crash, OnetimeToken, TelegramBot, Profile
+from monitor.models import Machine, Crash, OnetimeToken, TelegramBot, Profile, DupCrash
 from django.http import Http404
 import os
 import hashlib
@@ -148,14 +148,24 @@ def crash(request):
 		crashfile = request.FILES['file'] # get 'file' from post
 
 		parent_name = Icrash.crash_file.name
-		p_dir = settings.CRASH_STORAGE_ROOT+parent_name.split("/")[0] # get parent crash dir 
+		p_dir = settings.CRASH_STORAGE_ROOT+parent_name.split("/")[0] # get parent crash dir
 
-		# Save crash name as 1, 2, 3, ...
-		f = open(p_dir+"/"+str(dup_count), "wb") # save new crash into parent's dir (hash/num)
-		for chunk in crashfile.chunks():
-			f.write(chunk)
-		f.close()
+		file_hash = hashlib.md5(crashfile.read()).hexdigest()
 
+		try:
+			Dcrash = DupCrash.objects.get(crash_hash=file_hash)
+			Dcrash.dup_crash = Dcrash.dup_crash + 1;
+			Dcrash.save()
+		except ObjectDoesNotExist:
+			new_dup_crash = DupCrash(owner=fuzzer.owner, fuzzer=fuzzer, original_crash=Icrash, crash_hash=file_hash, crash_file=p_dir+"/"+str(dup_count))
+
+			# Save crash name as 1, 2, 3, ...
+			f = open(p_dir+"/"+str(dup_count), "wb") # save new crash into parent's dir (hash/num)
+			for chunk in crashfile.chunks():
+				f.write(chunk)
+			f.close()
+
+			new_dup_crash.save()
 		Icrash.save()
 		return HttpResponse("success")
 	else:
@@ -205,13 +215,18 @@ def generateToken(request):
 	error = False
 	idx = request.POST['idx']
 	file_type = request.POST['type']
-	allow_file_types = {"crash":Crash}
+	allow_file_types = {"crash":Crash, "dup_crash":DupCrash}
 
 	if file_type not in allow_file_types.keys(): # check file types
 		raise Http404
 
-	# Get Crash Instance
-	crash = allow_file_types[file_type].objects.get(id=idx)
+	try:
+		crash = Crash.objects.get(id=idx)
+		if file_type == "dup_crash":
+			crash_hash = request.POST['crash_hash']
+			crash = allow_file_types[file_type].objects.get(owner=request.user, original_crash=crash, crash_hash=crash_hash)
+	except:
+		raise Http404
 
 	# Check owner
 	# print(crash.owner != request.user)
@@ -222,7 +237,10 @@ def generateToken(request):
 	storage = crash.crash_file.storage.location
 
 	fname = crash.crash_file.name
+
 	full_path = storage + "/" + fname
+	if file_type == "dup_crash":
+		full_path = fname
 	new_token = hashlib.sha256((get_random_string(1024).encode('utf-8'))).hexdigest()
 
 	# Check already exists OTU(One Time Url) by filename.
@@ -246,7 +264,7 @@ def generateToken(request):
 		result['token'] = new_token
 		result['url'] = current_uri+"/fuzz/download?token="+new_token
 		result['dup'] = False
-		otf = OnetimeToken(owner=request.user, token=new_token, real_path = full_path, is_expired=False)
+		otf = OnetimeToken(owner=request.user, token=new_token, real_path=full_path, is_expired=False)
 		otf.save()
 
 	return JsonResponse(result)
