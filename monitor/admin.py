@@ -118,10 +118,10 @@ admin.site.register(OnetimeToken, OnetimeTokenAdmin)
 
 class EmailBotAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(EmailBot)
-	# exceptfield(list_display, )
+	exceptfield(list_display, ['email_pw_enc', 'email_pw'])
 
 	def profile(self, obj):
-		return len(Profile.objects.filter(telegram=obj))
+		return len(Profile.objects.filter(emailbot=obj))
 
 	def get_queryset(self, request):
 		fields = super(self.__class__, self).get_queryset(request)
@@ -131,6 +131,7 @@ class EmailBotAdmin(admin.ModelAdmin):
 	def get_fieldsets(self, request, obj=None):
 		fields = super(self.__class__, self).get_fieldsets(request, obj)
 		fields[0][1]['fields'].remove('owner') # Hide field
+		fields[0][1]['fields'].remove('email_pw_enc') # Hide field
 		return fields
 
 	def save_model(self, request, instance, form, change):

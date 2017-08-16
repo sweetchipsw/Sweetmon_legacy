@@ -93,55 +93,66 @@
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> Notification Settings (from settings.py) </h4>
                 <hr>
-                <form class="form-horizontal style-form" method="get">
+              <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Use Email Alert</label>
-                      {% if not notification_setting.USE_EMAIL_ALERT %}
-                      <div class="col-lg-10">
-                          <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
-                      </div>
-                      {% else %}
-                      <div class="col-lg-10">
+                      <label class="col-lg-2 col-sm-2 control-label">Email (Server)</label>
+                      <div class="col-lg-4">
+                      {% if notification_setting.USE_EMAIL_ALERT %}
                           <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
+                      {% else %}
+                          <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
+                      {% endif %}
                       </div>
-                      {% endif%}
+                      <label class="col-lg-2 col-sm-2 control-label">Email (User)</label>
+                      <div class="col-lg-4">
+                      {% if myprofile.use_email_alert %}
+                          <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
+                      {% else %}
+                          <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
+                      {% endif %}
+                      </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Use Telegram Alert</label>
-                      {% if not notification_setting.USE_TELEGRAM_ALERT %}
-                      <div class="col-lg-10">
-                          <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
-                      </div>
-                      {% else %}
-                      <div class="col-lg-10">
+                      <label class="col-lg-2 col-sm-2 control-label">Telegram (Server)</label>
+                      <div class="col-lg-4">
+                      {% if notification_setting.USE_TELEGRAM_ALERT %}
                           <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
+                      {% else %}
+                          <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
+                      {% endif %}
                       </div>
-                      {% endif%}
+                      <label class="col-lg-2 col-sm-2 control-label">Telegrma (User)</label>
+                      <div class="col-lg-4">
+                      {% if myprofile.use_telegram_alert %}
+                          <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
+                      {% else %}
+                          <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
+                      {% endif %}
+                      </div>
                   </div>
-                  Please check the settings.py to modify settings.
-                </form>
+                  </form>
               </div><!--/showback -->
 
               <!-- BASIC PROGRESS BARS -->
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> Email Notification
-                  {% if not notification_setting.USE_EMAIL_ALERT %}
-                  <span class="label label-danger">DISABLED</span>
-                  {% else %}
+                  {% if notification_setting.USE_EMAIL_ALERT and myprofile.use_email_alert %}
                   <span class="label label-success">ENABLED</span>
+                  {% else %}
+                  <span class="label label-danger">DISABLED</span>
                   {% endif%} </h4>
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">SMTP Server</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">smtp.google.com</p>
+                          <p class="form-control-static">{{myprofile.emailbot.smtp_server}}</p>
                       </div>
                   </div>
                   <div class="form-group">
                       <label class="col-lg-2 col-sm-2 control-label">Sender Email</label>
                       <div class="col-lg-10">
-                          <p class="form-control-static">{{notification_setting.EMAIL_SENDER}}</p>
+                          <p class="form-control-static">{{myprofile.emailbot}}</p>
                       </div>
                   </div>
                   <div class="form-group">
@@ -163,10 +174,10 @@
 
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> Telegram Notification
-                {% if not notification_setting.USE_TELEGRAM_ALERT %}
-                  <span class="label label-danger">DISABLED</span>
-                  {% else %}
+                  {% if notification_setting.USE_TELEGRAM_ALERT and myprofile.use_telegram_alert %}
                   <span class="label label-success">ENABLED</span>
+                  {% else %}
+                  <span class="label label-danger">DISABLED</span>
                   {% endif%} </h4>
                 <hr>
                 <form class="form-horizontal style-form" method="get">
@@ -293,6 +304,12 @@
                       <div class="col-lg-10">
                           <p class="form-control-static">Bitcoin : 17mzPSrAvkSnhRzsUhDydqtNMuqp8BFGeT</p>
                           <p class="form-control-static">Ethereum : 17BznPq7p3N3AH9caqHt3qHMwDp7GvFQ9K</p>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="col-lg-2 col-sm-2 control-label">Template</label>
+                      <div class="col-lg-10">
+                          <p class="form-control-static">Dashgum : <a href="http://blacktie.co/2014/07/dashgum-free-dashboard/">http://blacktie.co/2014/07/dashgum-free-dashboard/</a></p>
                       </div>
                   </div>
                   </form>

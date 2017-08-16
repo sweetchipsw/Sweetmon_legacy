@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from monitor.models import Machine, Crash, OnetimeToken, TelegramBot, Profile, DupCrash
+from monitor.models import Machine, Crash, OnetimeToken, TelegramBot, Profile, DupCrash, AESCipher, getSha256text
 from django.http import Http404
 import os
 import hashlib
@@ -307,6 +307,9 @@ def SendMsgViaTelegramByUid(request, message):
 	except ObjectDoesNotExist:
 		raise Http404
 
+	if profile.use_telegram_alert == False or settings.USE_TELEGRAM_ALERT == False:
+		return False
+
 	# API Key of telegram bot
 	try:
 		apikey = profile.telegram.telegram_bot_key;
@@ -328,17 +331,25 @@ def SendMsgViaEmailByUid(request, message):
 	try:
 		profile = Profile.objects.get(owner=request.user)
 	except ObjectDoesNotExist:
-		result = False
-		return result
-
-	target_email = profile.email
-	if target_email == "" or message == "":
 		return False
 
+	if profile.use_email_alert == False or settings.USE_EMAIL_ALERT == False:
+		return False
 
+	email = profile.emailbot
+	target_email = profile.email
+	if email == "" or message == "":
+		return False
+	server = email.smtp_server
+	port = email.smtp_port
+	sender_id = email.email_id
+	sender_pw = email.email_pw_enc
 
+	aeskey = getSha256text((email.owner.username + settings.SECRET_KEY + email.owner.username).encode('utf-8'))[:32]
+
+	sender_pw = AESCipher(aeskey).decrypt(sender_pw)
 	try:
-		result = telealert.send_with_gmail(target_email, message)
+		result = telealert.send_with_gmail(server, port, sender_id, sender_pw, target_email, message)
 	except Exception as e:
 		result = False
 	return result

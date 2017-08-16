@@ -12,6 +12,7 @@ import datetime
 import glob
 import os
 import hashlib
+import threading
 
 def CheckPostVariable(POST, parameter):
 	for param in parameter:

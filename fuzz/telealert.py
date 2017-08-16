@@ -11,15 +11,12 @@ from email.mime.text import MIMEText
 URL_BASE = "https://api.telegram.org/bot"
 URL_SEND = "/sendmessage"
 
-MAIL_SERVER = settings.SMTP_INFO["SMTP_SERVER"]
-MAIL_PORT = settings.SMTP_INFO["SMTP_PORT"]
-SENDER_ID = settings.SMTP_INFO["SMTP_ID"]
-SENDER_PW = settings.SMTP_INFO["SMTP_PW"]
+def send_with_gmail(serveraddr, port, sender_id, sender_pw, to_addr, body):
 
-
-def send_with_gmail(to_addr, body):
-	if MAIL_SERVER == "" or MAIL_PORT == "" or SENDER_ID == "" or SENDER_PW == "":
-		return False
+	MAIL_SERVER = serveraddr
+	MAIL_PORT = port
+	SENDER_ID = sender_id
+	SENDER_PW = sender_pw
 
 	gmail_user = SENDER_ID
 	gmail_pw = SENDER_PW

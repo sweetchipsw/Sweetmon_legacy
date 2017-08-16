@@ -123,7 +123,8 @@ class OnetimeToken(models.Model):
 class EmailBot(models.Model):
 	owner = models.ForeignKey(User)
 	email_id = models.CharField(max_length=512)
-	email_pw = models.CharField(max_length=512, help_text="Note that, password can be decrypted when login to smtp server. So don't use your password.", blank=True, null=True)
+	email_pw = models.CharField(max_length=512, help_text="Use only if you want to change password", blank=True, null=True)
+	email_pw_enc = models.CharField(max_length=512, default="")
 	smtp_server = models.CharField(max_length=512)
 	smtp_port = models.CharField(max_length=5)
 	is_public = models.BooleanField(default=False, help_text="Check true if you want to share this email")
@@ -151,6 +152,7 @@ class Profile(models.Model):
 	email = models.EmailField(max_length=512, null=True, blank=True)
 	profile_image = models.FileField(storage=userimageStorage, null=True, blank=True, upload_to=getimageUploadPath)
 
+	emailbot = models.ForeignKey(EmailBot, null=True, blank=True)
 	telegram = models.ForeignKey(TelegramBot, null=True, blank=True)
 	telegram_chatid = models.CharField(max_length=12,null=True, blank=True, help_text="To get your chat_id, Add '@get_id_bot' and send '/my_id'")
 	public_key = models.TextField(max_length=10000, blank=True, null=True, help_text="You should fill out this field to use file encryption.")
@@ -190,12 +192,17 @@ class AESCipher(object):
 
 def EncryptEmailPassword(sender, **kwargs):
 	obj = kwargs["instance"]
-	if kwargs["created"]:
-		key = getSha256text((obj.owner.username +settings.SECRET_KEY + obj.owner.username).encode('utf-8'), False)
-		enc = AESCipher(key).encrypt(obj.email_pw)
-		dec = AESCipher(key).decrypt(enc)
-		obj.email_pw = enc
+	if obj.email_pw == None:
+		# If password not changed
+		return
+	aeskey = getSha256text((obj.owner.username +settings.SECRET_KEY + obj.owner.username).encode('utf-8'))[:32]
+	enc = AESCipher(aeskey).encrypt(obj.email_pw)
+	if obj.email_pw_enc != enc:
+		# If password changed
+		obj.email_pw_enc = enc
+		obj.email_pw = None
 		obj.save()
+
 
 def create_profile(sender, **kwargs):
 	# Gen userkey
@@ -218,7 +225,6 @@ def SyncUserProfile(sender, **kwargs):
 	# Gen userkey
 	profile = kwargs["instance"]
 	if not kwargs["created"]:
-		print(profile.owner.id)
 		user_profile = User.objects.get(id=profile.owner.id)
 		user_profile.email = profile.email
 		user_profile.last_name = profile.last_name
@@ -228,5 +234,5 @@ def SyncUserProfile(sender, **kwargs):
 post_save.connect(create_profile, sender=User)
 post_save.connect(SyncUserProfile, sender=Profile)
 # pre_save.connect(problem_hash_check_pre_save, sender=AuthInformation)
-post_save.connect(EncryptEmailPassword, sender=EmailBot)
+pre_save.connect(EncryptEmailPassword, sender=EmailBot)
 
