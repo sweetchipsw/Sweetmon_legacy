@@ -153,3 +153,7 @@ Session.vim
 tags
 
 # End of https://www.gitignore.io/api/vim,django,python,sublimetext
+
+files/crashes/
+files/fuzzer/
+files/testcase/
