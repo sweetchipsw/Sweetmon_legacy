@@ -118,12 +118,14 @@ admin.site.register(OnetimeToken, OnetimeTokenAdmin)
 
 class EmailBotAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(EmailBot)
-	exceptfield(list_display, ['email_pw_enc', 'email_pw'])
+	exceptfield(list_display, ['email_pw_enc', 'email_pw', 'profile'])
 
+	# DEPRECATED
 	def profile(self, obj):
 		return len(Profile.objects.filter(emailbot=obj))
 
 	def get_queryset(self, request):
+		# Get only current user's information or public id
 		fields = super(self.__class__, self).get_queryset(request)
 		fields = fields.filter(Q(owner_id=request.user) | Q(is_public=True))
 		return fields

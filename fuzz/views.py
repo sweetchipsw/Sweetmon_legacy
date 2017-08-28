@@ -243,7 +243,7 @@ def generateToken(request):
 		full_path = fname
 	new_token = hashlib.sha256((get_random_string(1024).encode('utf-8'))).hexdigest()
 
-	# Check already exists OTU(One Time Url) by filename.
+	# Check if already exists OTU(One Time Url) by filename.
 	# It prevents generating duplcated URL
 	try:
 		otu = OnetimeToken.objects.get(real_path=full_path, is_expired=False)

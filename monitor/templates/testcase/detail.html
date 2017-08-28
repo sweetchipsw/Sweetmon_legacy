@@ -48,7 +48,10 @@
 
           		<div class="col-lg-12">
                   <div class="form-panel">
-                  	  <h4 class="mb">Information</h4> 
+                      <a href="/testcase/"><button type="button" class="btn btn-theme1 pull-right">Back to lists</button></a>
+                      <a href=""><button type="button" class="btn btn-theme1 pull-right">Modify Testcase</button></a>
+
+                  	  <h4 class="mb">Information</h4>
                   	  <hr>
                       <form class="form-horizontal style-form" action="">
                           <div class="form-group">
@@ -79,45 +82,94 @@ FUZZER_NAME = "{{testcase.fuzzerName}}"
 FUZZING_TARGET = "{{testcase.target}}"
 BINARY = "{{testcase.binaryName}}"
 SERVER_URL = "{{ request.get_host }}"
-SERVER_PROTOCOL = "{% if request.is_secure %}https://{% else %}http{% endif %}"</pre></p>
+SERVER_PROTOCOL = "{% if request.is_secure %}https://{% else %}http://{% endif %}"</pre></p>
+                              </div>
+                          </div>
+                     <div class="form-group">
+                          <label class="col-lg-2 col-sm-2 control-label"></label>
+                          <div class="col-sm-10">
+                              <a href="/admin/monitor/testcase/{{testcase.id}}/change/">
+                              <button type="button" class="btn btn-theme02 btn-lg btn-block"><i class="fa fa-check"></i> Modify Information </button></a>
+                          </div>
+                      </div>
+
+                      </form>
+                  </div>
+          		</div><!-- col-lg-12-->      	
+          	</div><!-- /row -->
+
+           {% if testcase.testcase_url or testcase.testcaseFile %}
+        	<div class="row mt">
+          		<div class="col-lg-12">
+                  <div class="form-panel">
+                  	  <h4 class="mb">Download Testcase</h4>
+                  	  <hr>
+                      <form class="form-horizontal style-form" action="">
+                          {% if testcase.testcaseFile %}
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">from server</label>
+                              <div class="col-sm-10">
+                                  <p class="form-control-static"> <a href="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/files/testcase/{{testcase.testcaseFile.name}}">Downalod</a></p>
                               </div>
                           </div>
                           <div class="form-group">
-                              <label class="col-lg-2 col-sm-2 control-label">Download</label>
+                              <label class="col-lg-2 col-sm-2 control-label">via Wget</label>
+                              <div class="col-sm-10">
+                                  <input type="text" class="form-control" readonly value="wget {% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/files/testcase/{{testcase.testcaseFile.name}} ">
+                              </div>
+                          </div>
+                          {% endif %}
+                          {% if testcase.testcase_url %}
+                          <div class="form-group">
+                              <label class="col-lg-2 col-sm-2 control-label">from external</label>
                               <div class="col-sm-10">
                                   <p class="form-control-static"> <a href="{{testcase.testcase_url}}">{{testcase.testcase_url}}</a></p>
                               </div>
                           </div>
-                          <div class="form-group">
-                              <label class="col-lg-2 col-sm-2 control-label">Download via Wget</label>
-                              <div class="col-sm-10">
-                                  <input type="text" class="form-control" value="wget {{testcase.testcase_url}} ">
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label class="col-lg-2 col-sm-2 control-label">Fuzzer link</label>
-                              <div class="col-sm-10">
-                                  <p class="form-control-static"> <a href="{{testcase.fuzzer_url}}">{{testcase.fuzzer_url}}</a></p>
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label class="col-lg-2 col-sm-2 control-label">Download via Wget</label>
-                              <div class="col-sm-10">
-                                  <input type="text" class="form-control" value="wget {{testcase.fuzzer_url}} ">
-                              </div>
-                          </div>
-                          <div class="form-group">
-                              <label class="col-lg-2 col-sm-2 control-label"></label>
-                              <div class="col-sm-10">
-                                  <a href="/testcase/">
-                                  <button type="button" class="btn btn-theme1 btn-lg btn-block"><i class="fa fa-check"></i> Back to lists</button></a>
-                              </div>
-                          </div>
+                          {% endif %}
                       </form>
+                  </div>
+          		</div><!-- col-lg-12-->
+          	</div><!-- /row -->
+          {% endif %}
+           {% if testcase.fuzzer_url or testcase.fuzzerFile %}
+            <div class="row mt">
+          		<div class="col-lg-12">
+                 <form class="form-horizontal style-form" action="">
+                  <div class="form-panel">
+                      <div class="form-group">
+                          <h4 class="col-lg-12 control-label">Download Fuzzer </h4>
+                      </div>
+                          {% if testcase.fuzzerFile %}
+
+                      <div class="form-group">
+                          <label class="col-lg-2 col-sm-2 control-label">from server</label>
+                          <div class="col-sm-10">
+                              <p class="form-control-static"> <a href="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/files/testcase/{{testcase.fuzzerFile.name}}">Download</a></p>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="col-lg-2 col-sm-2 control-label">via Wget</label>
+                          <div class="col-sm-10">
+                              <input type="text" class="form-control" readonly value="wget {% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/files/testcase/{{testcase.fuzzerFile.name}} ">
+                          </div>
+                      </div>
+                      {% endif %}
+                          {% if testcase.fuzzer_url %}
+
+                      <div class="form-group">
+                          <label class="col-lg-2 col-sm-2 control-label">from external</label>
+                          <div class="col-sm-10">
+                              <p class="form-control-static"> <a href="{{testcase.fuzzer_url}}">{{testcase.fuzzer_url}}</a></p>
+                          </div>
+                      </div>
+                          {% endif %}
+                  </form>
 
                   </div>
-          		</div><!-- col-lg-12-->      	
+          		</div><!-- col-lg-12-->
           	</div><!-- /row -->
+            {% endif %}
 		</section><! --/wrapper -->
       </section><!-- /MAIN CONTENT -->
 

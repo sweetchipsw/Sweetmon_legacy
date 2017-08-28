@@ -29,11 +29,19 @@ def getSha256text(plain, convtohex=True):
 
 
 def getUploadPath(instance, filename):
+	# For crash
 	return '{0}/{1}'.format(instance.crash_file.name, filename)
 
+def getFuzzUploadPath(instance, filename):
+	# For Testcase / Crash
+	rd_str = getSha256text( str(os.urandom(32)).encode('utf-8')  )
+	rd_str_len = int(len(rd_str) / 2)
+	location = '{0}/{1}'.format((rd_str[:rd_str_len]), (rd_str[rd_str_len:]))
+	return location
 
 def getimageUploadPath(instance, filename):
-	return '{0}.jpg'.format( getSha256text(str(os.urandom(32)).encode('utf-8')) )
+	# For Image
+	return '{0}.jpg'.format(getSha256text( str(os.urandom(32)).encode('utf-8')  ).encode('utf-8'))
 
 
 class Machine(models.Model):
@@ -84,17 +92,18 @@ class DupCrash(models.Model):
 		return "%s" % (obj.crash_hash)
 
 class Testcase(models.Model):
+	# For uploading fuzzer and testcases.
 	owner = models.ForeignKey(User)
 
-	title = models.CharField(max_length=200)
-	fuzzerName = models.CharField(max_length=200)
-	binaryName = models.CharField(max_length=200)
-	target = models.CharField(max_length=200)
-	description = models.TextField(max_length=1024)
-	testcase_url = models.CharField(max_length=1024)
+	title = models.CharField(max_length=200, blank=True, null=True)
+	fuzzerName = models.CharField(max_length=200, blank=True, null=True)
+	binaryName = models.CharField(max_length=200, blank=True, null=True)
+	target = models.CharField(max_length=200, blank=True, null=True)
+	description = models.TextField(max_length=1024, blank=True, null=True)
+	testcase_url = models.CharField(max_length=1024, blank=True, null=True)
 	fuzzer_url = models.CharField(max_length=1024, blank=True, null=True)
-	fuzzerFile = models.FileField(storage=fuzzerStorage, blank=True)
-	testcaseFile = models.FileField(storage=testcaseStorage, blank=True)
+	fuzzerFile = models.FileField(storage=fuzzerStorage, upload_to=getFuzzUploadPath, blank=True)
+	testcaseFile = models.FileField(storage=testcaseStorage, upload_to=getFuzzUploadPath, blank=True)
 
 	def __str__(obj):
 		return "%s" % (obj.title)
@@ -103,9 +112,9 @@ class Testcase(models.Model):
 class Issue(models.Model):
 	owner = models.ForeignKey(User)
 
-	title = models.CharField(max_length=200)
-	description = models.TextField(max_length=1024)
-	link = models.CharField(max_length=1024)
+	title = models.CharField(max_length=200, blank=True, null=True)
+	description = models.TextField(max_length=1024, blank=True, null=True)
+	link = models.CharField(max_length=1024, blank=True, null=True)
 	isopen = models.BooleanField(default=True)
 	cve = models.CharField(max_length=200, blank=True, null=True)
 	etc_numbering = models.CharField(max_length=200, blank=True, null=True)
@@ -230,6 +239,15 @@ def SyncUserProfile(sender, **kwargs):
 		user_profile.last_name = profile.last_name
 		user_profile.first_name = profile.first_name
 		user_profile.save()
+
+def check_owner(sender, **kwargs):
+	print(sender)
+	print("==================")
+	print(kwargs['signal'])
+	print(kwargs['instance'].owner)
+
+# Check owner
+pre_save.connect(check_owner, sender=EmailBot)
 
 post_save.connect(create_profile, sender=User)
 post_save.connect(SyncUserProfile, sender=Profile)

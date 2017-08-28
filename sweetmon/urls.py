@@ -19,6 +19,8 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout, views
+from django.conf import settings
+from django.conf.urls.static import static
 
 # DEPRECATED
 # from monitor.views import ShowProfile, ModifyProfile
@@ -37,3 +39,6 @@ urlpatterns = [
     # url(r'^account/profile/$',ShowProfile, name="profile"),
     # url(r'^account/profile/modify$',ModifyProfile, name="profile"),
 ]
+
+if settings.DEBUG is True:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
