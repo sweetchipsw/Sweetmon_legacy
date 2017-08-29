@@ -116,15 +116,16 @@ USE_EMAIL_ALERT=True
 USE_TELEGRAM_ALERT=True
 
 ########################
+# DEPTECATED
 # https://www.google.com/settings/security/lesssecureapps
 # Make sure less_secure_apps select 'use'
 ########################
-SMTP_INFO = { 
-    "SMTP_SERVER" : "smtp.gmail.com",
-    "SMTP_PORT" : 587,
-    "SMTP_ID" : "",
-    "SMTP_PW" : ""
-    }
+# SMTP_INFO = {
+#     "SMTP_SERVER" : "smtp.gmail.com",
+#     "SMTP_PORT" : 587,
+#     "SMTP_ID" : "",
+#     "SMTP_PW" : ""
+#     }
 
 # Messagee wrap for alert
 TELEGRAM_MESSAGE = """[SWEETMON] New crash detected : __title__ / __description__"""

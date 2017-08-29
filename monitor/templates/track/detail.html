@@ -42,18 +42,18 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-          	<h3><i class="fa fa-angle-right"></i> Testcase</h3>   	
+          	<h3><i class="fa fa-angle-right"></i> Issue</h3>
           	<!-- BASIC FORM ELELEMNTS -->
           	<div class="row mt">
 
           		<div class="col-lg-12">
                   <div class="form-panel">
                   <a href="/track/issue/"><button type="button" class="btn btn-theme1 pull-right">Back to lists</button></a>
-                  	  <h4 class="mb">Information</h4> 
+                  	  <h4 class="mb">Issue Information</h4>
                   	  <hr>
                       <form class="form-horizontal style-form" action="">
                           <div class="form-group">
-                              <label class="col-lg-2 col-sm-2 control-label">Testcase Title</label>
+                              <label class="col-lg-2 col-sm-2 control-label">Issue Title</label>
                               <div class="col-sm-10">
                                   <p class="form-control-static">{{issue.title}}</p>
                               </div>
@@ -61,13 +61,13 @@
                           <div class="form-group">
                               <label class="col-lg-2 col-sm-2 control-label">Description</label>
                               <div class="col-sm-10">
-                                  <p class="form-control-static">{{issue.description}}</p>
+                                  <p class="form-control-static"><pre>{{issue.description}}</pre></p>
                               </div>
                           </div>
                           <div class="form-group">
                               <label class="col-lg-2 col-sm-2 control-label">Link to issue</label>
                               <div class="col-sm-10">
-                                  <p class="form-control-static"> <a href="{{issue.link}}">{{issue.link}}</a></p>
+                                  <p class="form-control-static"><a href="{{issue.link}}">{{issue.link}}</a></p>
                               </div>
                           </div>
                           <div class="form-group">

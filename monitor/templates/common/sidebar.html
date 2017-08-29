@@ -3,7 +3,15 @@
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               	  <!-- profile -->
-              	  <p class="centered"><a href="/admin/monitor/profile/{{userinfo.id}}/change/"><img src="/assets/img/ui-sam.jpg" class="img-circle" width="60"></p></a>
+              	  <p class="centered">
+                      <a href="/admin/monitor/profile/{{userinfo.id}}/change/">
+                          {% if myprofile %}
+                          <img src="/files/userimage/{{myprofile.profile_image}}" class="img-circle" width="60">
+                          {% else %}
+                          <img src="/assets/img/ui-sam.jpg" class="img-circle" width="60">
+                          {% endif %}
+                      </a>
+                  </p>
               	  <h5 class="centered">{{userinfo.username}} ({{userinfo.first_name}})</h5>
                   <li class="mt">
                       <a href="/monitor/fuzzer/">
@@ -12,31 +20,22 @@
                       </a>
                   </li>
                   <li class="sub-menu">
-                      <a href="javascript:;" >
+                      <a href="/monitor/crash/" >
                           <i class="fa fa-flash"></i>
                           <span>Crash</span>
                       </a>
-                      <ul class="sub">
-                          <li><a  href="/monitor/crash/"><i class="fa fa-list"></i>Crash Lists</a></li>
-                      </ul>
                   </li>
                   <li class="sub-menu">
-                      <a href="javascript:;" >
+                      <a href="/testcase/" >
                           <i class="fa fa-file-o"></i>
-                          <span>Testcase</span>
+                          <span>Testcase / Fuzzer</span>
                       </a>
-                      <ul class="sub">
-                          <li><a  href="/testcase/"><i class="fa fa-list"></i>List</a></li>
-                      </ul>
                   </li>
                   <li class="sub-menu">
-                      <a href="javascript:;" >
+                      <a href="/track/issue/" >
                           <i class="fa fa-exclamation-circle"></i>
-                          <span>Report Status</span>
+                          <span>Report</span>
                       </a>
-                      <ul class="sub">
-                          <li><a  href="/track/issue/"><i class="fa fa-compass"></i>Issue</a></li>
-                      </ul>
                   </li>
                   <li class="sub-menu">
                       <a href="/monitor/settings/">

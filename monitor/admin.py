@@ -181,6 +181,9 @@ class ProfileAdmin(admin.ModelAdmin):
 	def telegram(self, obj):
 		return "asd"
 
+	def profile_image(self, obj):
+		return "asd1"
+
 	readonly_fields = ('userkey',)
 
 

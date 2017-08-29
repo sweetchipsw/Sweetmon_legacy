@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
-from monitor.models import Issue
+from monitor.models import Issue, Profile
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login, logout, views
@@ -13,7 +13,9 @@ def check_auth(request):
 def index(request):
 	check_auth(request)
 	issue_list = Issue.objects.filter(owner=request.user)
-	context = {'issue_list': issue_list, 'userinfo':request.user}
+	myprofile = Profile.objects.get(owner=request.user)
+	context = {'issue_list': issue_list, 'userinfo':request.user, "myprofile":myprofile}
+
 	return render(request, 'track/index.html', context)
 
 def issue_details(request,idx):
@@ -23,5 +25,6 @@ def issue_details(request,idx):
 		issue = Issue.objects.get(id=idx)
 	except ObjectDoesNotExist:
 	    raise Http404
-	context = {'issue': issue, 'userinfo': request.user}
+	myprofile = Profile.objects.get(owner=request.user)
+	context = {'issue': issue, 'userinfo': request.user, "myprofile":myprofile}
 	return render(request, 'track/detail.html', context)

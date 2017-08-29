@@ -41,7 +41,11 @@ def getFuzzUploadPath(instance, filename):
 
 def getimageUploadPath(instance, filename):
 	# For Image
-	return '{0}.jpg'.format(getSha256text( str(os.urandom(32)).encode('utf-8')  ).encode('utf-8'))
+	rd_str = getSha256text( str(os.urandom(32)).encode('utf-8')  )
+	rd_str_len = int(len(rd_str) / 2) # 8 8 8 8
+	# I don't care ext :P
+	location = '{0}/{1}.jpg'.format((rd_str[:rd_str_len]), (rd_str[rd_str_len:]))
+	return location
 
 
 class Machine(models.Model):
@@ -134,7 +138,7 @@ class EmailBot(models.Model):
 	email_id = models.CharField(max_length=512)
 	email_pw = models.CharField(max_length=512, help_text="Use only if you want to change password", blank=True, null=True)
 	email_pw_enc = models.CharField(max_length=512, default="")
-	smtp_server = models.CharField(max_length=512)
+	smtp_server = models.CharField(max_length=512, help_text="Check https://www.google.com/settings/security/lesssecureapps if use Gmail")
 	smtp_port = models.CharField(max_length=5)
 	is_public = models.BooleanField(default=False, help_text="Check true if you want to share this email")
 
@@ -247,7 +251,7 @@ def check_owner(sender, **kwargs):
 	print(kwargs['instance'].owner)
 
 # Check owner
-pre_save.connect(check_owner, sender=EmailBot)
+# pre_save.connect(check_owner, sender=EmailBot)
 
 post_save.connect(create_profile, sender=User)
 post_save.connect(SyncUserProfile, sender=Profile)
