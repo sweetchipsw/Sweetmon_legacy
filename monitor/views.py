@@ -36,8 +36,6 @@ def index(request):
 	myprofile = Profile.objects.get(owner=request.user)
 	profilenum = profiles.order_by('-id')[0].id
 
-	print(myprofile)
-
 	context = {'server_count':server_count, 'cve_count':cve_count,'issue_count':issue_count, 'crash_count': crash_count, 'machine_count': machine_count, 'userinfo':request.user, 'profilenum':profilenum, 'profile':profiles, 'myprofile':myprofile}
 	
 	return render(request, 'monitor/index.html', context)

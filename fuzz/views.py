@@ -94,110 +94,6 @@ def status(request):
 
 	return HttpResponse("success")
 
-def crash(request):
-
-	# Check POST
-	if request.method != 'POST':
-		raise Http404
-
-	# Check Parameter
-	parameterList = ['token', 'crashlog', 'title']
-	if not CheckPostVariable(request.POST, parameterList):
-		raise Http404
-
-	# Get Parameters
-	token = request.POST['token']
-	crashlog = request.POST['crashlog']
-	title = request.POST['title']
-
-
-	# Get fuzzer information by token
-	fuzzer = None
-	try:
-		fuzzer = Machine.objects.get(token=token)
-	except ObjectDoesNotExist:
-	    raise Http404
-
-	target = fuzzer.target
-	fuzzer_name = fuzzer.fuzzer_name
-
-	# Generate hash by title
-	crash_hash = hashlib.sha1(title.encode("utf-8")).hexdigest()
-	
-	# Check if crash already exists
-	Icrash = None
-	dup_flag = False
-
-	try:
-		Icrash = Crash.objects.get(crash_hash=crash_hash)
-		dup_flag = True
-	except ObjectDoesNotExist:
-		dup_flag = False
-
-	# Add 1 to crash count.
-	fuzzer.crash_count = fuzzer.crash_count + 1
-	fuzzer.save()
-
-
-	if dup_flag == True:
-		# If duplicate crash
-		# we need to save dup crash
-		dup_count = Icrash.dup_crash + 1
-		Icrash.dup_crash = dup_count
-
-		crashfile = request.FILES['file'] # get 'file' from post
-
-		parent_name = Icrash.crash_file.name
-		p_dir = settings.CRASH_STORAGE_ROOT+parent_name.split("/")[0] # get parent crash dir
-
-		file_hash = hashlib.md5(crashfile.read()).hexdigest()
-
-		try:
-			Dcrash = DupCrash.objects.get(crash_hash=file_hash)
-			Dcrash.dup_crash = Dcrash.dup_crash + 1;
-			Dcrash.save()
-		except ObjectDoesNotExist:
-			new_dup_crash = DupCrash(owner=fuzzer.owner, fuzzer=fuzzer, original_crash=Icrash, crash_hash=file_hash, crash_file=p_dir+"/"+str(dup_count))
-
-			# Save crash name as 1, 2, 3, ...
-			f = open(p_dir+"/"+str(dup_count), "wb") # save new crash into parent's dir (hash/num)
-			for chunk in crashfile.chunks():
-				f.write(chunk)
-			f.close()
-
-			new_dup_crash.save()
-		Icrash.save()
-		return HttpResponse("success")
-	else:
-		# If new crash
-		crashfile = request.FILES['file']
-		crashfile.name = hashlib.sha1((crashfile.name+get_random_string(300)).encode("utf-8")).hexdigest()
-		# crash_size = crashfile.size
-		link = crashfile.name
-		new_crash = Crash(owner=fuzzer.owner, fuzzer=fuzzer, crash_hash=crash_hash, title=title, crashlog=crashlog, crash_file=crashfile)
-		new_crash.save()
-
-
-		# Send if alert == True
-		"""
-		is_alert = False
-		try:
-			userInfo = AlertInfoUser.objects.get(telegram_user="293123771")
-			is_alert = True
-			if userInfo.use_telegram == False:
-				is_alert = False
-		except ObjectDoesNotExist:
-			is_alert = False
-		# If true, get user infromation
-		if is_alert == True:
-			sender = userInfo.telegram_bot_key;
-			target = userInfo.telegram_user;
-			message = "[New crash detected (From sweetmon)] "
-			send_message(sender, target, message);
-		"""
-		# sendswcp("[New crash detected (From sweetmon)] "+title)
-	return HttpResponse("success") # Return success
-
 def generateToken(request):
 
 	if request.method != 'POST':
@@ -298,46 +194,31 @@ def downloadFileByToken(request):
 
 	return response 
 
-def SendMsgViaTelegramByUid(request, message):
+def SendMsgViaTelegramByUid(profile, message):
 
 	result = False
-
-	try:
-		profile = Profile.objects.get(owner=request.user)
-	except ObjectDoesNotExist:
-		raise Http404
-
 	if profile.use_telegram_alert == False or settings.USE_TELEGRAM_ALERT == False:
 		return False
-
 	# API Key of telegram bot
 	try:
 		apikey = profile.telegram.telegram_bot_key;
-		target_id = profile.telegram_chatid;
+		target = profile.telegram_chatid;
 	except AttributeError as e:
 		return False
 
-	if apikey == "" or target_id == "" or message == "":
+	if apikey == "" or target == "" or message == "":
 		return False
 
-	result = telealert.send_message(apikey, target_id, message)
+	result = telealert.send_message(apikey, target, message)
 
 	return result
 
 
-def SendMsgViaEmailByUid(request, message):
+def SendMsgViaEmailByUid(profile, message):
 	result = False
 
-	try:
-		profile = Profile.objects.get(owner=request.user)
-	except ObjectDoesNotExist:
-		return False
-
-	if profile.use_email_alert == False or settings.USE_EMAIL_ALERT == False:
-		return False
-
+	target_email = profile.email;
 	email = profile.emailbot
-	target_email = profile.email
 	if email == "" or message == "":
 		return False
 	server = email.smtp_server
@@ -373,11 +254,28 @@ def alert(request, test=False):
 	via = request.POST['via']
 
 	if via == "telegram":
-		result = SendMsgViaTelegramByUid(request, message)
+		try:
+			profile = Profile.objects.get(owner=request.user)
+		except ObjectDoesNotExist:
+			raise Http404
+
+		result = SendMsgViaTelegramByUid(profile, message)
 		if result == False:
 			error = "Please check your telegram settings."
 	elif via == "email":
-		result = SendMsgViaEmailByUid(request, message)
+		try:
+			profile = Profile.objects.get(owner=request.user)
+		except ObjectDoesNotExist:
+			return False
+
+		if profile.use_email_alert == False or settings.USE_EMAIL_ALERT == False:
+			return False
+
+		email = profile.emailbot
+		target_email = profile.email
+
+		result = SendMsgViaEmailByUid(profile, message)
+
 		if result == False:
 			error = "Please check your email settings."
 	return JsonResponse({"result":result, "error":error})
@@ -385,6 +283,109 @@ def alert(request, test=False):
 def alert_test(request):
 	return alert(request, test=True)
 
+
+def crash(request):
+	# Check POST
+	if request.method != 'POST':
+		raise Http404
+
+	# Check Parameter
+	parameterList = ['token', 'crashlog', 'title']
+	if not CheckPostVariable(request.POST, parameterList):
+		raise Http404
+
+	# Get Parameters
+	token = request.POST['token']
+	crashlog = request.POST['crashlog']
+	title = request.POST['title']
+
+	# Get fuzzer information by token
+	fuzzer = None
+	try:
+		fuzzer = Machine.objects.get(token=token)
+	except ObjectDoesNotExist:
+		raise Http404
+
+	target = fuzzer.target
+	fuzzer_name = fuzzer.fuzzer_name
+
+	# Generate hash by title
+	crash_hash = hashlib.sha1(title.encode("utf-8")).hexdigest()
+
+	# Check if crash already exists
+	Icrash = None
+	dup_flag = False
+
+	try:
+		Icrash = Crash.objects.get(crash_hash=crash_hash)
+		dup_flag = True
+	except ObjectDoesNotExist:
+		dup_flag = False
+
+	# Add 1 to crash count.
+	fuzzer.crash_count = fuzzer.crash_count + 1
+	fuzzer.save()
+
+	if dup_flag == True:
+		# If duplicate crash
+		# we need to save dup crash
+		dup_count = Icrash.dup_crash + 1
+		Icrash.dup_crash = dup_count
+
+		crashfile = request.FILES['file']  # get 'file' from post
+
+		parent_name = Icrash.crash_file.name
+		p_dir = settings.CRASH_STORAGE_ROOT + parent_name.split("/")[0]  # get parent crash dir
+
+		file_hash = hashlib.md5(crashfile.read()).hexdigest()
+
+		try:
+			Dcrash = DupCrash.objects.get(crash_hash=file_hash)
+			Dcrash.dup_crash = Dcrash.dup_crash + 1;
+			Dcrash.save()
+		except ObjectDoesNotExist:
+			new_dup_crash = DupCrash(owner=fuzzer.owner, fuzzer=fuzzer, original_crash=Icrash, crash_hash=file_hash,
+			                         crash_file=p_dir + "/" + str(dup_count))
+
+			# Save crash name as 1, 2, 3, ...
+			f = open(p_dir + "/" + str(dup_count), "wb")  # save new crash into parent's dir (hash/num)
+			for chunk in crashfile.chunks():
+				f.write(chunk)
+			f.close()
+
+			new_dup_crash.save()
+		Icrash.save()
+		return HttpResponse("success")
+	else:
+		# If new crash
+		crashfile = request.FILES['file']
+		crashfile.name = hashlib.sha1((crashfile.name + get_random_string(300)).encode("utf-8")).hexdigest()
+		# crash_size = crashfile.size
+		link = crashfile.name
+		new_crash = Crash(owner=fuzzer.owner, fuzzer=fuzzer, crash_hash=crash_hash, title=title, crashlog=crashlog,
+		                  crash_file=crashfile)
+		new_crash.save()
+
+		# Alert
+		profile = None
+		try:
+			profile = Profile.objects.get(owner=fuzzer.owner)
+		except ObjectDoesNotExist:
+			raise Http404
+
+		message = "This is test message"
+
+
+		if profile.use_telegram_alert == True:
+			# Send msg via telegram
+			SendMsgViaTelegramByUid(profile, message)
+
+		if profile.use_email_alert == True:
+			# Send msg via email
+			SendMsgViaEmailByUid(profile, message)
+
+		# sendswcp("[New crash detected (From sweetmon)] "+title)
+	return HttpResponse("success")  # Return success
 
 
 
