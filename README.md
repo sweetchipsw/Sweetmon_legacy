@@ -128,7 +128,7 @@ You should use sweetmon-client to interact with server. Please check sweetmon-cl
 
 # WIKI
 
-Please check this page.
+Please check [this] page.
 
 # Features
 
@@ -144,7 +144,8 @@ Sweetmon provides several functions for monitoring fuzzers and crashes.
   * Number of (duplicated) crashes
   * Support generating One-Time-URL to download crash.
   * Logging
-  * Crash informations(Name, Machine, Summary, Debug log, size)
+  * Crash informations (Name, Machine, Summary, Debug log, size)
+  * ​
 * Hosting Fuzzer and Testcase
   * Support generating One-Time-URL to download fuzzer or testcase.
 * Reports
@@ -159,7 +160,7 @@ Sweetmon provides several functions for monitoring fuzzers and crashes.
 
 # PS
 
-1. I'm waiting for your pull requests!
+1. Pull Requests are always welcome!
 2. Please create Issue or send me an email to me if you have any questions or requests.
 3. Please check the http://blog.sweetchip.kr/408 
 

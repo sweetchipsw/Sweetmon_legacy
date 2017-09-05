@@ -46,7 +46,7 @@
           	<h3><i class="fa fa-angle-right"></i> Statistics / Settings </h3>
 
               <div class="row mt">
-                  <div class="col-md-12">
+                  <div class="col-lg-12">
                       <div class="form-panel">
                           <table class="table table-striped table-advance table-hover">
 	                  	  	  <h4><i class="fa fa-angle-right"></i> Team Members (Total : {{ profiles|length }})</h4>
@@ -88,23 +88,23 @@
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
 
-              <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="col-lg-12">
 
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> Notification Settings </h4>
                 <hr>
               <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Email (Server)</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Email (Server)</label>
+                      <div class="col-sm-4">
                       {% if notification_setting.USE_EMAIL_ALERT %}
                           <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
                       {% else %}
                           <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
                       {% endif %}
                       </div>
-                      <label class="col-lg-2 col-sm-2 control-label">Email (User)</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Email (User)</label>
+                      <div class="col-sm-4">
                       {% if myprofile.use_email_alert %}
                           <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
                       {% else %}
@@ -113,16 +113,16 @@
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Telegram (Server)</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Telegram (Server)</label>
+                      <div class="col-sm-4">
                       {% if notification_setting.USE_TELEGRAM_ALERT %}
                           <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
                       {% else %}
                           <p class="form-control-static"><span class="label label-danger">DISABLED</span></p>
                       {% endif %}
                       </div>
-                      <label class="col-lg-2 col-sm-2 control-label">Telegrma (User)</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Telegrma (User)</label>
+                      <div class="col-sm-4">
                       {% if myprofile.use_telegram_alert %}
                           <p class="form-control-static"><span class="label label-success">ENABLED</span></p>
                       {% else %}
@@ -144,25 +144,25 @@
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">SMTP Server</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">SMTP Server</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">{{myprofile.emailbot.smtp_server}}</p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Sender Email</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">Sender Email</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">{{myprofile.emailbot}}</p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">My Email</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">My Email</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">{{myprofile.email}}</p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-10 control-label">Please wait until alert pops.</label>
+                      <label class="col-sm-10 control-label">Please wait until alert pops.</label>
                   </div>
               <input type="hidden" id="add-test-email-msg" value="test message"/>
               <input type="hidden" name="userid" value="test userid"/>
@@ -182,28 +182,28 @@
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Bot Name</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">Bot Name</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">{{myprofile.telegram.telegram_bot_name}}</p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Bot Key</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">Bot Key</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">{{myprofile.telegram.telegram_bot_key|truncatechars:20}}</p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">My chat_id</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">My chat_id</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static"><b>{{myprofile.telegram_chatid}}</b></p>
                           <span class="help-block">To get your own 'chat_id', Add '@get_id_bot' on telegram and send '/my_id' message.</span>
 
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Is Enabled</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">Is Enabled</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">False</p>
                       </div>
                   </div>
@@ -216,38 +216,38 @@
               </div><!--/showback -->
             </div><!--/col-lg-6 -->
 
-            <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="col-lg-12">
               <div class="showback">
                 <h4><i class="fa fa-angle-right"></i> Statistics </h4>
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Total Servers</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Total Servers</label>
+                      <div class="col-sm-4">
                           <p class="form-control-static"><b>{{server_count}}</b></p>
                       </div>
-                      <label class="col-lg-2 col-sm-2 control-label">Total Fuzzers</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Total Fuzzers</label>
+                      <div class="col-sm-4">
                           <p class="form-control-static"><b>{{machine_count}}</b></p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Total Testcases</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Total Testcases</label>
+                      <div class="col-sm-4">
                           <p class="form-control-static"><b>{{testcase_count}}</b></p>
                       </div>
-                      <label class="col-lg-2 col-sm-2 control-label">Total Crashes</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Total Crashes</label>
+                      <div class="col-sm-4">
                           <p class="form-control-static"><b>{{crash_count}}</b></p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Total issues</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Total issues</label>
+                      <div class="col-sm-4">
                           <p class="form-control-static">{{issue_count}}</p>
                       </div>
-                      <label class="col-lg-2 col-sm-2 control-label">Total CVEs</label>
-                      <div class="col-lg-4">
+                      <label class="col-sm-2 col-sm-2 control-label">Total CVEs</label>
+                      <div class="col-sm-4">
                           <p class="form-control-static"><b>{{cve_count}}</b></p>
                       </div>
                   </div>
@@ -262,20 +262,20 @@
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Check Update</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">Check Update</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static"><a href="http://github.com/sweetchipsw/sweetmon">http://github.com/sweetchipsw/sweetmon</a></p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">WIKI</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">WIKI</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static"><a href="http://github.com/sweetchipsw/sweetmon">http://github.com/sweetchipsw/sweetmon/wiki</a></p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">sweetmon-client</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">sweetmon-client</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static"><a href="http://github.com/sweetchipsw/sweetmon">http://github.com/sweetchipsw/sweetmon-client</a></p>
                       </div>
                   </div>
@@ -287,28 +287,28 @@
                 <hr>
                 <form class="form-horizontal style-form" method="get">
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Developer</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">Developer</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">sweetchip</p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Site</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">Site</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">Blog : <a href="http://blog.sweetchip.kr">http://blog.sweetchip.kr</a></p>
                           <p class="form-control-static">Github : <a href="http://github.com/sweetchipsw/">http://github.com/sweetchipsw/</a></p>
                       </div>
                   </div>                  
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Donation</label>
-                      <div class="col-lg-10">
-                          <p class="form-control-static">Bitcoin : 17mzPSrAvkSnhRzsUhDydqtNMuqp8BFGeT</p>
-                          <p class="form-control-static">Ethereum : 17BznPq7p3N3AH9caqHt3qHMwDp7GvFQ9K</p>
+                      <label class="col-sm-2 col-sm-2 control-label">Donation</label>
+                      <div class="col-sm-10">
+                          <p class="form-control-static">Bitcoin : 1M7usjq5PNz7vjWz1oyyzj2VHwKC6EmSsi</p>
+                          <p class="form-control-static">Ethereum : 0x93357b84488DDC8D52e2C6E51dF745B026F95B71</p>
                       </div>
                   </div>
                   <div class="form-group">
-                      <label class="col-lg-2 col-sm-2 control-label">Template</label>
-                      <div class="col-lg-10">
+                      <label class="col-sm-2 col-sm-2 control-label">Template</label>
+                      <div class="col-sm-10">
                           <p class="form-control-static">Dashgum : <a href="http://blacktie.co/2014/07/dashgum-free-dashboard/">http://blacktie.co/2014/07/dashgum-free-dashboard/</a></p>
                       </div>
                   </div>
