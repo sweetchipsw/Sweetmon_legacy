@@ -5,21 +5,18 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
-def check_auth(request):
-	if not request.user.username:
-		raise Http404
-
+@login_required
 def index(request):
-	check_auth(request)
 	testcase_list = Testcase.objects.filter(owner=request.user)
 	myprofile = Profile.objects.get(owner=request.user)
 
 	context = {'testcase_list': testcase_list, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'testcase/index.html', context)
 
+@login_required
 def testcase_details(request,idx):
-	check_auth(request)
 	crash_info = None
 	try:
 		testcase = Testcase.objects.get(id=idx)

@@ -13,6 +13,7 @@ import glob
 import os
 import hashlib
 import threading
+from django.contrib.auth.decorators import login_required
 
 def CheckPostVariable(POST, parameter):
 	for param in parameter:
@@ -20,13 +21,8 @@ def CheckPostVariable(POST, parameter):
 			return False
 	return True
 
-
-def check_auth(request):
-	if not request.user.username:
-		raise Http404
-
+@login_required
 def index(request):
-	check_auth(request)
 	machine_count = Machine.objects.filter(owner=request.user).count()
 	crash_count = Crash.objects.filter(owner=request.user).count()
 	issue_count = Issue.objects.filter(owner=request.user).count()
@@ -40,8 +36,8 @@ def index(request):
 	
 	return render(request, 'monitor/index.html', context)
 
+@login_required
 def fuzzer_list(request):
-	check_auth(request)
 	machine_list = Machine.objects.filter(owner=request.user).order_by('-ping')#.all()#[::-1]#.filter(idx>0).order_by('-idx')
 	now = datetime.datetime.now() - datetime.timedelta(minutes=5)
 	myprofile = Profile.objects.get(owner=request.user)
@@ -49,8 +45,8 @@ def fuzzer_list(request):
 	context = {'machine_list': machine_list, 'userinfo':request.user, 'now':now, 'myprofile':myprofile}
 	return render(request, 'monitor/fuzzer/list.html', context)
 
+@login_required
 def fuzzer_details(request, idx):
-	check_auth(request)
 	fuzzer_info = None
 	try:
 		fuzzer_info = Machine.objects.get(id=idx, owner=request.user)
@@ -60,15 +56,15 @@ def fuzzer_details(request, idx):
 	context = {'fuzzer': fuzzer_info, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'monitor/fuzzer/detail.html', context)
 
+@login_required
 def crash_list(request):
-	check_auth(request)
 	crash_info = Crash.objects.filter(owner=request.user)[::-1]
 	myprofile = Profile.objects.get(owner=request.user)
 	context = {'crashes': crash_info, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'monitor/crash/list.html', context)
 
+@login_required
 def crash_details(request, idx):
-	check_auth(request)
 	crash_info = None
 	try:
 		crash_info = Crash.objects.get(id=idx, owner=request.user)
@@ -78,8 +74,8 @@ def crash_details(request, idx):
 	context = {'crash': crash_info, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'monitor/crash/detail.html', context)
 
+@login_required
 def crash_details_dupcrash(request, idx, page=0):
-	check_auth(request)
 	crash_info = None
 	result = {}
 	try:
@@ -111,8 +107,8 @@ def crash_details_dupcrash(request, idx, page=0):
 	return JsonResponse(result)
 
 
+@login_required
 def crash_details_modify(request, idx):
-	check_auth(request)
 	crash_info = None
 
 	parameterList = ['comment']
@@ -132,9 +128,8 @@ def crash_details_modify(request, idx):
 	context = {'crash': crash_info, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'monitor/crash/detail.html', context)
 
+@login_required
 def settings_page(request):
-	check_auth(request)
-
 	machine_count = Machine.objects.filter(owner=request.user).count()
 	crash_count = Crash.objects.filter(owner=request.user).count()
 	issue_count = Issue.objects.filter(owner=request.user).count()

@@ -16,7 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# - Please Change this key when you use this project.
+# - Please Change this key before install on server.
 SECRET_KEY = 'y3r$r7#g(g_6xt!q35ct=6sqt0kiihqe2vc#k%bktayz@vok2v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -109,8 +109,9 @@ STATICFILES_DIRS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, '/')
-LOGIN_URL="/"
+LOGIN_URL="/account/login/"
 LOGIN_REDIRECT_URL="/"
+
 
 USE_EMAIL_ALERT=True
 USE_TELEGRAM_ALERT=True
@@ -128,7 +129,7 @@ USE_TELEGRAM_ALERT=True
 #     }
 
 # Messagee wrap for alert
-TELEGRAM_MESSAGE = """[SWEETMON] New crash detected : __title__ / __description__"""
+TELEGRAM_MESSAGE = """[SWEETMON] New crash detected : __title__ / __description__ """
 
 CRASH_STORAGE_ROOT = os.path.join(BASE_DIR, 'files/crashes/')
 TESTCASE_STORAGE_ROOT = os.path.join(BASE_DIR, 'files/testcase/')

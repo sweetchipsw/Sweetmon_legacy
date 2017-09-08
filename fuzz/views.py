@@ -9,17 +9,13 @@ from datetime import datetime
 from django.utils.crypto import get_random_string
 from django.conf import settings
 from . import telealert
+from django.contrib.auth.decorators import login_required
 
 def CheckPostVariable(POST, parameter):
 	for param in parameter:
 		if param not in POST:
 			return False
 	return True
-
-# Create your views here.
-def check_auth(request):
-	if not request.user.username:
-		raise Http404
 
 def index(request):
 	raise Http404
@@ -94,12 +90,11 @@ def status(request):
 
 	return HttpResponse("success")
 
+@login_required
 def generateToken(request):
 
 	if request.method != 'POST':
 		raise Http404
-
-	check_auth(request)
 
 	parameterList = ['idx', 'type']
 	if not CheckPostVariable(request.POST, parameterList):
@@ -235,12 +230,10 @@ def SendMsgViaEmailByUid(profile, message):
 		result = False
 	return result
 
+@login_required
 def alert(request, test=False):
 	if request.method != 'POST':
 		raise Http404
-
-	check_auth(request)
-
 	result = False
 
 	parameterList = ['message', 'via']

@@ -184,7 +184,7 @@ class ProfileAdmin(admin.ModelAdmin):
 	def profile_image(self, obj):
 		return "asd1"
 
-	readonly_fields = ('userkey',)
+	readonly_fields = ('userkey',"public_key")
 
 
 	if settings.USE_EMAIL_ALERT == False:
