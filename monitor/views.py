@@ -15,11 +15,13 @@ import hashlib
 import threading
 from django.contrib.auth.decorators import login_required
 
+
 def CheckPostVariable(POST, parameter):
 	for param in parameter:
 		if param not in POST:
 			return False
 	return True
+
 
 @login_required
 def index(request):
@@ -36,6 +38,7 @@ def index(request):
 	
 	return render(request, 'monitor/index.html', context)
 
+
 @login_required
 def fuzzer_list(request):
 	machine_list = Machine.objects.filter(owner=request.user).order_by('-ping')#.all()#[::-1]#.filter(idx>0).order_by('-idx')
@@ -44,6 +47,7 @@ def fuzzer_list(request):
 
 	context = {'machine_list': machine_list, 'userinfo':request.user, 'now':now, 'myprofile':myprofile}
 	return render(request, 'monitor/fuzzer/list.html', context)
+
 
 @login_required
 def fuzzer_details(request, idx):
@@ -56,12 +60,14 @@ def fuzzer_details(request, idx):
 	context = {'fuzzer': fuzzer_info, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'monitor/fuzzer/detail.html', context)
 
+
 @login_required
 def crash_list(request):
 	crash_info = Crash.objects.filter(owner=request.user)[::-1]
 	myprofile = Profile.objects.get(owner=request.user)
 	context = {'crashes': crash_info, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'monitor/crash/list.html', context)
+
 
 @login_required
 def crash_details(request, idx):
@@ -73,6 +79,7 @@ def crash_details(request, idx):
 	myprofile = Profile.objects.get(owner=request.user)
 	context = {'crash': crash_info, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'monitor/crash/detail.html', context)
+
 
 @login_required
 def crash_details_dupcrash(request, idx, page=0):
@@ -128,6 +135,7 @@ def crash_details_modify(request, idx):
 	context = {'crash': crash_info, 'userinfo':request.user, 'myprofile':myprofile}
 	return render(request, 'monitor/crash/detail.html', context)
 
+
 @login_required
 def settings_page(request):
 	machine_count = Machine.objects.filter(owner=request.user).count()
@@ -142,9 +150,4 @@ def settings_page(request):
 	notification_setting = {'USE_EMAIL_ALERT':settings.USE_EMAIL_ALERT,'USE_TELEGRAM_ALERT':settings.USE_TELEGRAM_ALERT}
 	context = {'testcase_count':testcase_count, 'server_count':server_count, 'cve_count':cve_count,'issue_count':issue_count, 'crash_count': crash_count, 'machine_count': machine_count,'userinfo':request.user, 'profiles':profile, 'myprofile':myprofile, 'notification_setting':notification_setting, 'myprofile':myprofile}
 	return render(request, 'settings.html', context)
-
-
-
-
-
 
