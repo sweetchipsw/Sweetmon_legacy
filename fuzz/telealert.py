@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 import requests
-import re
-import hashlib
-import os
-from django.conf import settings
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -17,9 +13,6 @@ def send_with_gmail(serveraddr, port, sender_id, sender_pw, to_addr, body):
 	MAIL_PORT = port
 	SENDER_ID = sender_id
 	SENDER_PW = sender_pw
-
-	gmail_user = SENDER_ID
-	gmail_pw = SENDER_PW
 
 	msg = MIMEMultipart('alternative')
 	msg['From'] = "SWEETMON_ALERT"
@@ -58,6 +51,3 @@ def send_message(sender_id, target_id, text):
 	except Exception as e:
 		return False
 	return result
-
-# def sendswcp(message):
-# 	return send_message(API_KEY, "293123771", message)

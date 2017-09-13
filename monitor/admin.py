@@ -177,14 +177,14 @@ admin.site.register(TelegramBot, TelegramBotAdmin)
 class ProfileAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(Profile)
 	# print(list_display)
-	exceptfield(list_display,["id", "public_key"])
+	exceptfield(list_display,["id"]) # , "public_key"
 	def telegram(self, obj):
 		return "asd"
 
 	def profile_image(self, obj):
 		return "asd1"
 
-	readonly_fields = ('userkey',"public_key")
+	readonly_fields = ('userkey',) # ,"public_key"
 
 
 	if settings.USE_EMAIL_ALERT == False:

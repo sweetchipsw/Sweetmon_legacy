@@ -28,10 +28,10 @@ from django.conf.urls.static import static
 urlpatterns = [
 	url(r'^$',include('monitor.urls'), name='index'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^monitor/', include('monitor.urls')),
+    url(r'', include('monitor.urls')),
     url(r'^fuzz/', include('fuzz.urls')),
     url(r'^testcase/', include('testcase.urls')),
-    url(r'^track/', include('track.urls')),
+    url(r'^issue/', include('track.urls')),
     url(r'^account/login/',auth_views.login,name='login',kwargs={'template_name': 'login.html'}),
     url(r'^account/logout/',auth_views.logout,name='logout',kwargs={'next_page': settings.LOGIN_URL,}),
 

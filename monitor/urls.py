@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
 	# views.py
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.fuzzer_list, name='fuzzers'),
     url(r'^fuzzer/$', views.fuzzer_list, name='fuzzers'), # machine list
     url(r'^fuzzer/(?P<idx>\d+)/$', views.fuzzer_details, name='fuzzer_details'), # machine list
     url(r'^crash/$', views.crash_list, name='crash_list'), # crashlist

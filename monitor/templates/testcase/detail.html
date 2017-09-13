@@ -105,7 +105,7 @@ SERVER_PROTOCOL = "{% if request.is_secure %}https://{% else %}http://{% endif %
                       <form class="form-horizontal style-form" action="">
                           {% if testcase.testcaseFile %}
                           <div class="form-group">
-                              <label class="col-lg-2 col-sm-2 control-label">from server</label>
+                              <label class="col-lg-2 col-sm-2 control-label">Uploaded File</label>
                               <div class="col-sm-10">
                                   <p class="form-control-static"> <a href="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/files/testcase/{{testcase.testcaseFile.name}}">Downalod</a></p>
                               </div>
@@ -119,7 +119,7 @@ SERVER_PROTOCOL = "{% if request.is_secure %}https://{% else %}http://{% endif %
                           {% endif %}
                           {% if testcase.testcase_url %}
                           <div class="form-group">
-                              <label class="col-lg-2 col-sm-2 control-label">from external</label>
+                              <label class="col-lg-2 col-sm-2 control-label">External</label>
                               <div class="col-sm-10">
                                   <p class="form-control-static"> <a href="{{testcase.testcase_url}}">{{testcase.testcase_url}}</a></p>
                               </div>
@@ -141,7 +141,7 @@ SERVER_PROTOCOL = "{% if request.is_secure %}https://{% else %}http://{% endif %
                           {% if testcase.fuzzerFile %}
 
                       <div class="form-group">
-                          <label class="col-lg-2 col-sm-2 control-label">from server</label>
+                          <label class="col-lg-2 col-sm-2 control-label">Uploaded File</label>
                           <div class="col-sm-10">
                               <p class="form-control-static"> <a href="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.get_host }}/files/testcase/{{testcase.fuzzerFile.name}}">Download</a></p>
                           </div>
@@ -156,7 +156,7 @@ SERVER_PROTOCOL = "{% if request.is_secure %}https://{% else %}http://{% endif %
                           {% if testcase.fuzzer_url %}
 
                       <div class="form-group">
-                          <label class="col-lg-2 col-sm-2 control-label">from external</label>
+                          <label class="col-lg-2 col-sm-2 control-label">External</label>
                           <div class="col-sm-10">
                               <p class="form-control-static"> <a href="{{testcase.fuzzer_url}}">{{testcase.fuzzer_url}}</a></p>
                           </div>

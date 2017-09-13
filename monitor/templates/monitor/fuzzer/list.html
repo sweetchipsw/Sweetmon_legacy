@@ -65,7 +65,7 @@
                                 {% for machine in machine_list %}
                                 <tr>
                                 <td>{{ machine.id }}</td>
-                                <td><a href="/monitor/fuzzer/{{ machine.id }}/">{{machine.target}}</a></td>
+                                <td><a href="/fuzzer/{{ machine.id }}/">{{machine.target}}</a></td>
                                 <td><span class="label label-primary">{{machine.fuzzer_name}}</span></td>
                                 {% if machine.ping|date:"U" >= now|date:"U" %}
                                 <td><span class="label label-success">Working</span></td>

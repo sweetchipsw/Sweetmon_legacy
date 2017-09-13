@@ -2,7 +2,6 @@ from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from monitor.models import Machine, Crash, OnetimeToken, TelegramBot, Profile, DupCrash, AESCipher, getSha256text
 from django.http import Http404
-import os
 import hashlib
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
@@ -42,7 +41,7 @@ def register(request):
 	except ObjectDoesNotExist:
 	    raise Http404	
 
-	#Generate new hash
+	# Generate new hash
 	# password = hashlib.sha256((settings.HASHSALT+password)).hexdigest()
 
 	token = get_random_string(300)
@@ -214,7 +213,7 @@ def SendMsgViaEmailByUid(profile, message):
 
 	target_email = profile.email;
 	email = profile.emailbot
-	if email == "" or message == "":
+	if email == None or message == "":
 		return False
 	server = email.smtp_server
 	port = email.smtp_port
@@ -377,7 +376,6 @@ def crash(request):
 			# Send msg via email
 			SendMsgViaEmailByUid(profile, message)
 
-		# sendswcp("[New crash detected (From sweetmon)] "+title)
 	return HttpResponse("success")  # Return success
 
 

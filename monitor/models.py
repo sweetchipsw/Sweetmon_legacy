@@ -34,14 +34,14 @@ def getUploadPath(instance, filename):
 
 def getFuzzUploadPath(instance, filename):
 	# For Testcase / Crash
-	rd_str = getSha256text( str(os.urandom(32)).encode('utf-8')  )
+	rd_str = getSha256text(str(os.urandom(32)).encode('utf-8'))
 	rd_str_len = int(len(rd_str) / 2)
 	location = '{0}/{1}'.format((rd_str[:rd_str_len]), (rd_str[rd_str_len:]))
 	return location
 
 def getimageUploadPath(instance, filename):
 	# For Image
-	rd_str = getSha256text( str(os.urandom(32)).encode('utf-8')  )
+	rd_str = getSha256text(str(os.urandom(32)).encode('utf-8'))
 	rd_str_len = int(len(rd_str) / 2) # 8 8 8 8
 	# I don't care ext :P
 	location = '{0}/{1}.jpg'.format((rd_str[:rd_str_len]), (rd_str[rd_str_len:]))
@@ -63,7 +63,6 @@ class Machine(models.Model):
 
 	def __str__(obj):
 		return "%s" % (obj.fuzzer_name)
-
 
 class Crash(models.Model):
 	owner = models.ForeignKey(User)
@@ -168,7 +167,7 @@ class Profile(models.Model):
 	emailbot = models.ForeignKey(EmailBot, null=True, blank=True)
 	telegram = models.ForeignKey(TelegramBot, null=True, blank=True)
 	telegram_chatid = models.CharField(max_length=12,null=True, blank=True, help_text="To get your chat_id, Add '@get_id_bot' and send '/my_id'")
-	public_key = models.TextField(max_length=10000, blank=True, null=True, help_text="You should fill out this field to use file encryption.")
+	# public_key = models.TextField(max_length=10000, blank=True, null=True, help_text="You should fill out this field to use file encryption.")
 
 	use_telegram_alert = models.BooleanField(default=False, help_text="You should fill out telegram_chatid to use this feature.")
 	use_email_alert = models.BooleanField(default=False, help_text="You should fill out email of your profile to use this feature.")
