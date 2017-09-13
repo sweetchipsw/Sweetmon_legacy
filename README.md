@@ -1,11 +1,28 @@
 # SWEETMON
-An universal fuzzing  monitoring framework for fuzzers based python+django.
+'SWEETMON' is a fuzzer monitoring service based python3 + django. User can check their fuzzers and crashes on the web. It can reduce repetitive work for fuzz testers.
 
-Sweetmon is a framework to monitor fuzzers and crashes developed by sweetchip.
 
-This project provides several functions to gather, 
 
-You should use sweetmon-client to interact with server. Please check sweetmon-client project at here.
+## What is this?
+
+Sweetmon provides several useful things for monitoring fuzzers and crashes.
+
+- Monitoring
+  - Fuzzers
+    - IP, Fuzzer Name, Status
+    - Number of crashes
+- Monitoring Crashes
+  - First / Last reported time
+  - Number of (duplicated) crashes
+  - Generate One-Time-URL to download crash.
+  - Crash Logs
+  - Crash informations (Name, Machine, Summary, Debug log, size)
+  - Notification (Via Telegram, Email)
+- Up/Download Fuzzer and Testcase
+  - Generate One-Time-URL to download fuzzer or testcase.
+- Reports
+  - Memo
+- Support multiple user
 
 
 
@@ -16,12 +33,31 @@ You should use sweetmon-client to interact with server. Please check sweetmon-cl
 3. Users can upload their fuzzer and testcases.
 4. Supports multiple users.
 
+
+
 ## Installation (Server)
+
+#### Easy Installation
+
+* Environment
+  * Ubuntu 16.04.3 LTS (Server, Clean vm)
+
+1. Install Ubuntu.
+
+2. Download the installer and execute it.
+
+   ```sh
+   wget https://raw.githubusercontent.com/sweetchipsw/sweetmon/master/install.sh -O install.sh && bash install.sh
+   ```
+
+3. Done!
+
+
+
+#### Manual Installation
 
 - Environment
   - Ubuntu 16.04.2 LTS (Server)
-  - Python3
-  - Django 1.18
 
 1. Install python3 + apache2 + virtualenv and sweetmon
 
@@ -114,8 +150,6 @@ You should use sweetmon-client to interact with server. Please check sweetmon-cl
 
    5. a
 
-   6. ​
-
 4. Generate superuser
 
    ``` sh
@@ -126,43 +160,28 @@ You should use sweetmon-client to interact with server. Please check sweetmon-cl
 
    1. Now you can use sweetmon-client.
 
+#### For windows, OS X
+
+* Not tested on these OS. But it will works.
+
+
+
+## After Install
+
+#### Change Secret key in settings.py
+
+
+
+
+
 # WIKI
 
 Please check [this] page.
-
-# Features
-
-Sweetmon provides several functions for monitoring fuzzers and crashes.
-
-* Monitoring Fuzzer
-  * Fuzzer
-    * Number of crashes
-  * Machine
-  * ​
-* Monitoring Crashes
-  * First / Last reported time
-  * Number of (duplicated) crashes
-  * Support generating One-Time-URL to download crash.
-  * Logging
-  * Crash informations (Name, Machine, Summary, Debug log, size)
-  * ​
-* Hosting Fuzzer and Testcase
-  * Support generating One-Time-URL to download fuzzer or testcase.
-* Reports
-  * Memo
-* ​
-
-# Directory
-- sweetmon : Monitor system (Django)
-
-
-
 
 # PS
 
 1. Pull Requests are always welcome!
 2. Please create Issue or send me an email to me if you have any questions or requests.
-3. Please check the http://blog.sweetchip.kr/408 
 
 
 
