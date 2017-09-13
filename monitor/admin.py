@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
-from monitor.models import Profile, Machine, Crash, Testcase, Issue, OnetimeToken, TelegramBot, EmailBot
+from monitor.models import Profile, Machine, Crash, Testcase, OnetimeToken, TelegramBot, EmailBot
 from django.db.models import Q
 
 
@@ -28,19 +28,17 @@ class MachineAdmin(admin.ModelAdmin):
 
 	def get_fieldsets(self, request, obj=None):
 		fields = super(self.__class__, self).get_fieldsets(request, obj)
-		fields[0][1]['fields'].remove('owner')  # Hide field
+		fields[0][1]['fields'].remove('owner')
 		return fields
 
 	def save_model(self, request, instance, form, change):
 		user = request.user 
 		instance = form.save(commit=False)
 		if not change or not instance.owner:
-			instance.owner = user  # set owner
+			instance.owner = user
 		instance.save()
 		form.save_m2m()
 		return instance
-
-admin.site.register(Machine, MachineAdmin)
 
 
 class CrashAdmin(admin.ModelAdmin):
@@ -54,19 +52,18 @@ class CrashAdmin(admin.ModelAdmin):
 		
 	def get_fieldsets(self, request, obj=None):
 		fields = super(self.__class__, self).get_fieldsets(request, obj)
-		fields[0][1]['fields'].remove('owner')  # Hide field
-		fields[0][1]['fields'].remove('fuzzer')  # Hide field
+		fields[0][1]['fields'].remove('owner')
+		fields[0][1]['fields'].remove('fuzzer')
 		return fields
 
 	def save_model(self, request, instance, form, change):
-		user = request.user 
+		user = request.user
 		instance = form.save(commit=False)
 		if not change or not instance.owner:
-			instance.owner = user  # set owner
+			instance.owner = user
 		instance.save()
 		form.save_m2m()
 		return instance
-admin.site.register(Crash, CrashAdmin)
 
 
 class TestcaseAdmin(admin.ModelAdmin):
@@ -79,55 +76,21 @@ class TestcaseAdmin(admin.ModelAdmin):
 		
 	def get_fieldsets(self, request, obj=None):
 		fields = super(self.__class__, self).get_fieldsets(request, obj)
-		fields[0][1]['fields'].remove('owner') # Hide field
+		fields[0][1]['fields'].remove('owner')
 		return fields
 
 	def save_model(self, request, instance, form, change):
 		user = request.user 
 		instance = form.save(commit=False)
 		if not change or not instance.owner:
-			instance.owner = user # set owner
+			instance.owner = user
 		instance.save()
 		form.save_m2m()
 		return instance
-
-admin.site.register(Testcase,TestcaseAdmin)
-
-class IssueAdmin(admin.ModelAdmin):
-	list_display = get_all_field_names(Issue)
-
-	def get_queryset(self, request):
-		fields = super(self.__class__, self).get_queryset(request)
-		fields = fields.filter(owner_id=request.user)
-		return fields
-
-	def get_fieldsets(self, request, obj=None):
-		fields = super(self.__class__, self).get_fieldsets(request, obj)
-		fields[0][1]['fields'].remove('owner') # Hide field
-		return fields
-
-	def save_model(self, request, instance, form, change):
-		user = request.user 
-		instance = form.save(commit=False)
-		if not change or not instance.owner:
-			instance.owner = user # set owner
-		instance.save()
-		form.save_m2m()
-		return instance
-
-admin.site.register(Issue, IssueAdmin)
-
-# Register information of fuzzer
-# DEPRECATED
-# class AuthInformationAdmin(admin.ModelAdmin):
-# 	list_display = get_all_field_names(AuthInformation)
-# 	exceptfield(list_display,["password"])
-# admin.site.register(AuthInformation, AuthInformationAdmin)
 
 
 class OnetimeTokenAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(OnetimeToken)
-# admin.site.register(OnetimeToken, OnetimeTokenAdmin)
 
 
 class EmailBotAdmin(admin.ModelAdmin):
@@ -146,19 +109,18 @@ class EmailBotAdmin(admin.ModelAdmin):
 
 	def get_fieldsets(self, request, obj=None):
 		fields = super(self.__class__, self).get_fieldsets(request, obj)
-		fields[0][1]['fields'].remove('owner') # Hide field
-		fields[0][1]['fields'].remove('email_pw_enc') # Hide field
+		fields[0][1]['fields'].remove('owner')
+		fields[0][1]['fields'].remove('email_pw_enc')
 		return fields
 
 	def save_model(self, request, instance, form, change):
 		user = request.user 
 		instance = form.save(commit=False)
 		if not change or not instance.owner:
-			instance.owner = user # set owner
+			instance.owner = user
 		instance.save()
 		form.save_m2m()
 		return instance
-admin.site.register(EmailBot, EmailBotAdmin)
 
 
 class TelegramBotAdmin(admin.ModelAdmin):
@@ -175,25 +137,23 @@ class TelegramBotAdmin(admin.ModelAdmin):
 
 	def get_fieldsets(self, request, obj=None):
 		fields = super(self.__class__, self).get_fieldsets(request, obj)
-		fields[0][1]['fields'].remove('owner') # Hide field
+		fields[0][1]['fields'].remove('owner')
 		return fields
 
 	def save_model(self, request, instance, form, change):
 		user = request.user 
 		instance = form.save(commit=False)
 		if not change or not instance.owner:
-			instance.owner = user # set owner
+			instance.owner = user
 		instance.save()
 		form.save_m2m()
 		return instance
 
-admin.site.register(TelegramBot, TelegramBotAdmin)
 
 
 class ProfileAdmin(admin.ModelAdmin):
 	list_display = get_all_field_names(Profile)
-	# print(list_display)
-	exceptfield(list_display,["id"])  # , "public_key"
+	exceptfield(list_display,["id"])
 
 	def telegram(self, obj):
 		return "asd"
@@ -201,15 +161,13 @@ class ProfileAdmin(admin.ModelAdmin):
 	def profile_image(self, obj):
 		return "asd1"
 
-	readonly_fields = ('userkey',)  # ,"public_key"
+	readonly_fields = ('userkey',)
 
 	if settings.USE_EMAIL_ALERT == False:
 		readonly_fields += ('test_email', 'use_email_alert',)
 
 	if settings.USE_TELEGRAM_ALERT == False:
 		readonly_fields += ('test_telegram', 'use_telegram_alert', )
-
-	# print(readonly_fields)
 
 	def get_queryset(self, request):
 		fields = super(self.__class__, self).get_queryset(request)
@@ -230,4 +188,10 @@ class ProfileAdmin(admin.ModelAdmin):
 		form.save_m2m()
 		return instance
 
+# admin.site.register(Machine, MachineAdmin)
+# admin.site.register(Crash, CrashAdmin)
+
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Testcase,TestcaseAdmin)
+admin.site.register(EmailBot, EmailBotAdmin)
+admin.site.register(TelegramBot, TelegramBotAdmin)

@@ -6,9 +6,7 @@ import os
 from django.db.models.signals import pre_save, post_save
 import hashlib
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin, User
-import binascii
 import base64
-from Crypto import Random
 from Crypto.Cipher import AES
 from django.contrib.auth.models import Permission
 
@@ -117,22 +115,6 @@ class Testcase(models.Model):
 	def __str__(obj):
 		return "%s" % (obj.title)
 
-
-class Issue(models.Model):
-	owner = models.ForeignKey(User)
-
-	title = models.CharField(max_length=200, blank=True, null=True)
-	description = models.TextField(max_length=1024, blank=True, null=True)
-	link = models.CharField(max_length=1024, blank=True, null=True)
-	isopen = models.BooleanField(default=True)
-	cve = models.CharField(max_length=200, blank=True, null=True)
-	etc_numbering = models.CharField(max_length=200, blank=True, null=True)
-	reward = models.IntegerField(default=0)
-
-	def __str__(obj):
-		return "%s" % (obj.title)
-
-
 class OnetimeToken(models.Model):
 	token = models.CharField(max_length=512)
 	real_path = models.CharField(max_length=5120)
@@ -180,7 +162,7 @@ class Profile(models.Model):
 	telegram = models.ForeignKey(TelegramBot, null=True, blank=True)
 	telegram_chatid = models.CharField(max_length=12, null=True, blank=True,
 	                                   help_text="To get your chat_id, Add '@get_id_bot' and send '/my_id'")
-	# public_key = models.TextField(max_length=10000, blank=True, null=True, help_text="You should fill out this field to use file encryption.")
+	alert_message = models.TextField(max_length=10000, default="[SWEETMON] New crash detected : __title__ / __description__", blank=True, null=True, help_text="__title__ => Crash title, __description__ => Crash log")
 
 	use_telegram_alert = models.BooleanField(default=False,
 	                                         help_text="You should fill out telegram_chatid to use this feature.")
@@ -251,11 +233,11 @@ def create_profile(sender, **kwargs):
 
 		# Add permissions for staff
 		permission_list = ['Can add testcase', 'Can change testcase', 'Can delete testcase',
-		                   'Can add email bot', 'Can change email bot', 'Can delete email bot',
-		                   'Can add issue', 'Can change issue', 'Can delete issue',
-		                   'Can add telegram bot', 'Can change telegram bot', 'Can delete telegram bot',
-		                   'Can add testcase', 'Can change testcase', 'Can delete testcase',
-		                   'Can change profile']
+							'Can add email bot', 'Can change email bot', 'Can delete email bot',
+							'Can add issue', 'Can change issue', 'Can delete issue',
+							'Can add telegram bot', 'Can change telegram bot', 'Can delete telegram bot',
+							'Can add testcase', 'Can change testcase', 'Can delete testcase',
+							'Can change profile']
 		for permission in permission_list:
 			userperm = Permission.objects.get(name=permission)
 			user.user_permissions.add(userperm)

@@ -349,10 +349,9 @@ def crash(request):
 		Icrash.save()
 		return HttpResponse("success")
 	else:
-		# If new crash
+		# If found new crash
 		crashfile = request.FILES['file']
 		crashfile.name = hashlib.sha1((crashfile.name + get_random_string(300)).encode("utf-8")).hexdigest()
-		# crash_size = crashfile.size
 		link = crashfile.name
 		new_crash = Crash(owner=fuzzer.owner, fuzzer=fuzzer, crash_hash=crash_hash, title=title, crashlog=crashlog,
 		                  crash_file=crashfile)
@@ -365,8 +364,9 @@ def crash(request):
 		except ObjectDoesNotExist:
 			raise Http404
 
-		message = "This is test message"
-
+		# Get base message from profile.
+		message = profile.alert_message
+		message = message.replace("__title__", title).replace("__description__", crashlog)
 
 		if profile.use_telegram_alert == True:
 			# Send msg via telegram

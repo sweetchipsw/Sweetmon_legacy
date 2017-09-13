@@ -46,7 +46,7 @@
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="form-panel">
-                        <a href="/admin/monitor/issue/add/">
+                        <a href="/admin/track/issue/add/">
                   <button type="button" class="btn btn-theme1 pull-right">Add new issue</button></a>
                           <table class="table table-striped table-advance table-hover">
 	                  	  	  <h4><i class="fa fa-angle-right"></i> Issue Lists </h4>
@@ -65,7 +65,7 @@
                                 {% for issue in issue_list %}
                                 <tr>
                                 <td>{{ issue.id }}</td>
-                                <td><a href="/track/issue/{{issue.id}}/">{{issue.title}}</a></td>
+                                <td><a href="/issue/{{issue.id}}/">{{issue.title}}</a></td>
                                 <td>{{issue.description|truncatechars:30}}</td>
                                 <td><span class="label label-info">{{issue.cve}}</span></td>
                                 <td>{{issue.reward}}</td>

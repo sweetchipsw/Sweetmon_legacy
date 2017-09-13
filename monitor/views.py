@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from monitor.models import Machine, Crash, Testcase, Issue, Profile, DupCrash
+from monitor.models import Machine, Crash, Testcase, Profile, DupCrash
+from track.models import Issue
 from django.http import Http404
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist

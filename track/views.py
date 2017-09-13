@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
-from monitor.models import Issue, Profile
+from monitor.models import Profile
+from track.models import Issue
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login, logout, views

@@ -116,20 +116,6 @@ LOGIN_REDIRECT_URL="/"
 USE_EMAIL_ALERT=True
 USE_TELEGRAM_ALERT=True
 
-########################
-# DEPTECATED
-# https://www.google.com/settings/security/lesssecureapps
-# Make sure less_secure_apps select 'use'
-########################
-# SMTP_INFO = {
-#     "SMTP_SERVER" : "smtp.gmail.com",
-#     "SMTP_PORT" : 587,
-#     "SMTP_ID" : "",
-#     "SMTP_PW" : ""
-#     }
-
-# Messagee wrap for alert
-TELEGRAM_MESSAGE = """[SWEETMON] New crash detected : __title__ / __description__ """
 
 CRASH_STORAGE_ROOT = os.path.join(BASE_DIR, 'files/crashes/')
 TESTCASE_STORAGE_ROOT = os.path.join(BASE_DIR, 'files/testcase/')
@@ -138,6 +124,7 @@ USERIMAGE_STORAGE_ROOT = os.path.join(BASE_DIR, 'files/userimage/')
 
 if DEBUG == False:
     SESSION_COOKIE_AGE = 60 * 30
+
 # AUTH_USER_MODEL = 'auth.User'
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
