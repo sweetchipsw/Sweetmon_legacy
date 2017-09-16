@@ -30,51 +30,51 @@ Sweetmon provides several useful things for monitoring fuzzers and crashes.
 
 1. Initial screen
 
-   ![https://user-images.githubusercontent.com/14085555/30513140-24c99316-9b39-11e7-8218-ddd6860afa13.png]()
+   ![https://user-images.githubusercontent.com/14085555/30513140-24c99316-9b39-11e7-8218-ddd6860afa13.png](https://user-images.githubusercontent.com/14085555/30513140-24c99316-9b39-11e7-8218-ddd6860afa13.png)
 
 2. User Profile
 
-   ![https://user-images.githubusercontent.com/14085555/30513141-24ca4554-9b39-11e7-83c3-8a821f2d90ef.png]()
+   ![](https://user-images.githubusercontent.com/14085555/30513141-24ca4554-9b39-11e7-83c3-8a821f2d90ef.png)
 
 3. Fuzzer list
 
-   ![https://user-images.githubusercontent.com/14085555/30513145-24cee578-9b39-11e7-950d-ec270335105a.png]()
+   ![](https://user-images.githubusercontent.com/14085555/30513145-24cee578-9b39-11e7-950d-ec270335105a.png)
 
 4. Fuzzer information
 
-   ![https://user-images.githubusercontent.com/14085555/30513144-24cd1dec-9b39-11e7-95b1-e4e8c66045af.png]()
+   ![](https://user-images.githubusercontent.com/14085555/30513144-24cd1dec-9b39-11e7-95b1-e4e8c66045af.png)
 
 5. Crash list
 
-   ![https://user-images.githubusercontent.com/14085555/30513142-24cbe08a-9b39-11e7-8a47-475f441b2e53.png]()
+   ![](https://user-images.githubusercontent.com/14085555/30513142-24cbe08a-9b39-11e7-8a47-475f441b2e53.png)
 
 6. Crash details
 
-   ![https://user-images.githubusercontent.com/14085555/30513143-24cc88a0-9b39-11e7-9df7-3884de362875.png]()
+   ![](https://user-images.githubusercontent.com/14085555/30513143-24cc88a0-9b39-11e7-9df7-3884de362875.png)
 
 7. Crash details (2)
 
-   ![https://user-images.githubusercontent.com/14085555/30513146-24edce52-9b39-11e7-99a0-f457cb32318a.png]()
+   ![](https://user-images.githubusercontent.com/14085555/30513146-24edce52-9b39-11e7-99a0-f457cb32318a.png)
 
 8. Testcase & Fuzzer list
 
-   ![https://user-images.githubusercontent.com/14085555/30513147-24ef89e0-9b39-11e7-8916-9101de7f2cb2.png]()
+   ![](https://user-images.githubusercontent.com/14085555/30513147-24ef89e0-9b39-11e7-8916-9101de7f2cb2.png)
 
 9. Testcase & Fuzzer details
 
-   ![https://user-images.githubusercontent.com/14085555/30513148-24ef9ffc-9b39-11e7-8e75-e9e223de96c0.png]()
+   ![](https://user-images.githubusercontent.com/14085555/30513148-24ef9ffc-9b39-11e7-8e75-e9e223de96c0.png)
 
 10. Issue list
 
-    ![https://user-images.githubusercontent.com/14085555/30513150-24f368e4-9b39-11e7-886f-7fcafddd5b8b.png]()
+    ![](https://user-images.githubusercontent.com/14085555/30513150-24f368e4-9b39-11e7-886f-7fcafddd5b8b.png)
 
 11. Issue Details
 
-    ![https://user-images.githubusercontent.com/14085555/30513149-24f31ce0-9b39-11e7-9351-faaa42d02533.png]()
+    ![](https://user-images.githubusercontent.com/14085555/30513149-24f31ce0-9b39-11e7-9351-faaa42d02533.png)
 
 12. Statistics
 
-    ![https://user-images.githubusercontent.com/14085555/30513151-24f3c712-9b39-11e7-9b1a-5345faa7a86c.png]()
+    ![](https://user-images.githubusercontent.com/14085555/30513151-24f3c712-9b39-11e7-9b1a-5345faa7a86c.png)
 
 
 
