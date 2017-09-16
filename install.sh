@@ -101,7 +101,7 @@ echo "[*] Generate superuser."
 $PYTHON3 manage.py createsuperuser
 
 echo "[*] Initialize file permissions."
-sudo chown :www-data ./ -R
+sudo chown www-data:www-data ./ -R
 
 echo "[!] Finish! Connect to $DOMAIN on your browser!"
 echo "[ ] Next Step : Apply SSL certificate on Apache2 server. (Optional)"
