@@ -1,27 +1,24 @@
 # SWEETMON
 'SWEETMON' is a fuzzer monitoring service based python3 + django. User can check their fuzzers and crashes on the web. It can reduce repetitive work for fuzz testers.
 
-
-
 ## What is this?
 
 Sweetmon provides several useful things for monitoring fuzzers and crashes.
 
 - Monitoring
   - Fuzzers
-    - IP, Fuzzer Name, Status
+    - IP, fuzzer name, status
     - Number of crashes
 - Monitoring Crashes
-  - First / Last reported time
+  - First or last reported time
   - Number of (duplicated) crashes
-  - Generate One-Time-URL to download crash.
-  - Crash Logs
-  - Crash informations (Name, Machine, Summary, Debug log, size)
-  - Notification (Via Telegram, Email)
-- Up/Download Fuzzer and Testcase
-  - Generate One-Time-URL to download fuzzer or testcase.
-- Reports
-  - Memo
+  - Generate one-time-url to download crash.
+  - Crash logs
+  - Crash informations (name, machine, summary, debug log, size)
+  - Notification (via Telegram or email)
+- Up/download fuzzer and testcase
+  - Host testcase or fuzzer file
+- Issue
 - Support multiple user
 
 
@@ -128,121 +125,114 @@ Sweetmon provides several useful things for monitoring fuzzers and crashes.
    sudo apt install virtualenv
    git clone https://github.com/sweetchipsw/sweetmon.git
    ```
+2. Update your server and Install dependencies
 
-2. Set virtualenv
+   ```sh
+   sudo apt update
+   sudo apt upgrade -y
+   sudo apt install -y python3 python3-pip apache2 virtualenv libapache2-mod-wsgi-py3 letsencrypt git
+   ```
 
-   1. Update your server and Install dependencies
+3. Clone sweetmon project & Set env
 
-      ```sh
-      sudo apt update
-      sudo apt upgrade -y
-      sudo apt install -y python3 python3-pip apache2 virtualenv libapache2-mod-wsgi-py3 letsencrypt git
-      ```
+   ```sh
+   git clone https://github.com/sweetchipsw/sweetmon.git
+   export LOCATION=`pwd`
+   export VENV='sweetmon_venv'
+   ```
 
-   2. Clone sweetmon project & Set env
+4. Install && Activate virtualenv.
 
-      ```sh
-      git clone https://github.com/sweetchipsw/sweetmon.git
-      export LOCATION=`pwd`
-      export VENV='sweetmon_venv'
-      ```
+   ```sh
+   virtualenv -p python3 sweetmon_venv
+   . sweetmon_venv/bin/activate
+   ```
 
-   3. Install && Activate virtualenv.
+5. Install django + dependencies.
 
-      ```sh
-      virtualenv -p python3 sweetmon_venv
-      . sweetmon_venv/bin/activate
-      ```
+   ```sh
+   sudo pip3 install django
+   sudo pip3 install requests
+   sudo pip3 install pycrypto
+   ```
 
-   4. Install django + dependencies.
+6. Make configuration file
 
-      ```sh
-      sudo pip3 install django
-      sudo pip3 install requests
-      sudo pip3 install pycrypto
-      ```
+   ```sh
+   sudo vim /etc/apache2/sites-available/sweetmon.conf
+   ```
 
-   5. Make configuration file
+7. Paste under contents.
 
-      ```sh
-      sudo vim /etc/apache2/sites-available/sweetmon.conf
-      ```
+   ```
+   <VirtualHost *:80>
+       WSGIScriptAlias / $LOCATION/sweetmon/sweetmon/wsgi.py
+       WSGIDaemonProcess sweetmon python-path=$LOCATION/sweetmon/ python-home=$LOCATION/$VENV/lib/python3.5/site-packages
+       WSGIProcessGroup sweetmon
 
-   6. Paste under contents.
+       ServerName $DOMAIN
+       ServerAlias $DOMAIN
+       ServerAdmin $EMAIL
 
-      ```
-      <VirtualHost *:80>
-          WSGIScriptAlias / $LOCATION/sweetmon/sweetmon/wsgi.py
-          WSGIDaemonProcess sweetmon python-path=$LOCATION/sweetmon/ python-home=$LOCATION/$VENV/lib/python3.5/site-packages
-          WSGIProcessGroup sweetmon
+       DocumentRoot $LOCATION/sweetmon/
 
-          ServerName $DOMAIN
-          ServerAlias $DOMAIN
-          ServerAdmin $EMAIL
+       ErrorLog /var/log/apache2/sweetmon_error.log
+       CustomLog /var/log/apache2/sweetmon_custom.log combined
 
-          DocumentRoot $LOCATION/sweetmon/
+       Alias /robots.txt $LOCATION/sweetmon/static/robots.txt
+       Alias /assets/admin $LOCATION/$VENV/lib/python3.5/site-packages/django/contrib/admin/static/admin
+       Alias /assets $LOCATION/sweetmon/static/
+       <Directory $LOCATION/sweetmon/>
+           Require all granted
+       </Directory>
 
-          ErrorLog /var/log/apache2/sweetmon_error.log
-          CustomLog /var/log/apache2/sweetmon_custom.log combined
+       <Directory $LOCATION/sweetmon/sweetmon/ >
+       <Files wsgi.py>
+           Require all granted
+       </Files>
+       </Directory>
 
-          Alias /robots.txt $LOCATION/sweetmon/static/robots.txt
-          Alias /assets/admin $LOCATION/$VENV/lib/python3.5/site-packages/django/contrib/admin/static/admin
-          Alias /assets $LOCATION/sweetmon/static/
-          <Directory $LOCATION/sweetmon/>
-              Require all granted
-          </Directory>
+       <Directory $LOCATION/$VENV/lib/python3.5/site-packages/django/contrib/admin/static/admin/ >
+           Require all granted
+       </Directory>
+   </VirtualHost>
+   ```
 
-          <Directory $LOCATION/sweetmon/sweetmon/ >
-          <Files wsgi.py>
-              Require all granted
-          </Files>
-          </Directory>
+8. Restart apache2 server
 
-          <Directory $LOCATION/$VENV/lib/python3.5/site-packages/django/contrib/admin/static/admin/ >
-              Require all granted
-          </Directory>
-      </VirtualHost>
-      ```
-      ​
+   ```sh
+   sudo a2ensite sweetmon
+   sudo service apache2 restart
+   ```
 
-   7. Restart apache2 server
+9. Migrate DB / Set permission / Create super admin
 
-      ```sh
-      sudo a2ensite sweetmon
-      sudo service apache2 restart
+   ```sh
+   cd $LOCATION/sweetmon
+   python3 manage.py makemigrations
+   python3 manage.py migrate
+   sudo chown www-data:www-data ./ -R
+   python manage.py createsuperuser
+   ```
 
-      ```
-      ​
+10. Done.
 
-   8. Migrate DB / Set permission / Create super admin
 
-      ```sh
-      cd $LOCATION/sweetmon
-      python3 manage.py makemigrations
-      python3 manage.py migrate
-      sudo chown www-data:www-data ./ -R
-      python manage.py createsuperuser
-      ```
 
-   9. Done.
+#### Install SSL certificate on Apache2. (Optional, But highly recommended)
 
-#### Install SSL server
-
-This is an optional, but highly recommended.
+* Not completed yet
 
 1. Install Letsencrypt
 
    ```sh
    sudo apt install letsencrypt
    ```
-   ​
 
 2. Check your port-forwarding status.
 
    1. 80 (http)
    2. 443 (https)
-
-   ​
 
 3. Generate SSL Certificate
 
@@ -250,15 +240,11 @@ This is an optional, but highly recommended.
    sudo letsencrypt certonly -a standalone -d domain.com
    ```
 
-   ​
-
 4. Make configuration file for https.
 
    ```
 
    ```
-
-   ​
 
 5. Enable SSL & Restart apache2 server
 
@@ -266,14 +252,7 @@ This is an optional, but highly recommended.
 
    ```
 
-   ​
-
-6. Generate superuser
-
-   ``` sh
-   python manage.py createsuperuser
-   ```
-
+6. Done!
 
 
 #### For windows, OS X
@@ -287,7 +266,7 @@ This is an optional, but highly recommended.
 
 #### 1. Change Secret key in settings.py (/sweetmon/settings.py)
 
-* To make your server secure, you should change SECRET_KEY.
+* **To make your server secure, you should change SECRET_KEY.**
 
 ```python
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -296,13 +275,13 @@ This is an optional, but highly recommended.
 SECRET_KEY = '....'
 ```
 
-* How to generate '**new**' SECRET_KEY
+* Generate '**new**' SECRET_KEY
 
 ```python
 import random
-''.join(random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50))
+print(''.join(random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)))
 
-#'(vj1g8ps3a7li%g%go6uno4!n(9dfegsj7mvbicy$vv&c#!ak4'
+# '(vj1g8ps3a7li%g%go6uno4!n(9dfegsj7mvbicy$vv&c#!ak4'
 ```
 
 
@@ -320,3 +299,9 @@ import random
 
 
 
+# ETC
+
+* Template : Dashgum by [Alvarez.is](http://www.alvarez.is/) / You can find it [here](http://blacktie.co/2014/07/dashgum-free-dashboard/).
+* Donation
+  * Bitcoin : 1M7usjq5PNz7vjWz1oyyzj2VHwKC6EmSsi
+  * Ethereum : 0x93357b84488DDC8D52e2C6E51dF745B026F95B71
