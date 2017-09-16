@@ -153,8 +153,8 @@ class Profile(models.Model):
 	owner = models.ForeignKey(User)
 
 	##
-	last_name = models.CharField(max_length=512)
 	first_name = models.CharField(max_length=512)
+	last_name = models.CharField(max_length=512)
 	email = models.EmailField(max_length=512, null=True, blank=True)
 	profile_image = models.FileField(storage=userimageStorage, null=True, blank=True, upload_to=getimageUploadPath)
 

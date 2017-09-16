@@ -28,33 +28,94 @@ Sweetmon provides several useful things for monitoring fuzzers and crashes.
 
 ## Screenshots
 
-1. Showing all of fuzzers
-2. Providing crash information
-3. Users can upload their fuzzer and testcases.
-4. Supports multiple users.
+1. Initial screen
+
+   ![https://user-images.githubusercontent.com/14085555/30513140-24c99316-9b39-11e7-8218-ddd6860afa13.png]()
+
+2. User Profile
+
+   ![https://user-images.githubusercontent.com/14085555/30513141-24ca4554-9b39-11e7-83c3-8a821f2d90ef.png]()
+
+3. Fuzzer list
+
+   ![https://user-images.githubusercontent.com/14085555/30513145-24cee578-9b39-11e7-950d-ec270335105a.png]()
+
+4. Fuzzer information
+
+   ![https://user-images.githubusercontent.com/14085555/30513144-24cd1dec-9b39-11e7-95b1-e4e8c66045af.png]()
+
+5. Crash list
+
+   ![https://user-images.githubusercontent.com/14085555/30513142-24cbe08a-9b39-11e7-8a47-475f441b2e53.png]()
+
+6. Crash details
+
+   ![https://user-images.githubusercontent.com/14085555/30513143-24cc88a0-9b39-11e7-9df7-3884de362875.png]()
+
+7. Crash details (2)
+
+   ![https://user-images.githubusercontent.com/14085555/30513146-24edce52-9b39-11e7-99a0-f457cb32318a.png]()
+
+8. Testcase & Fuzzer list
+
+   ![https://user-images.githubusercontent.com/14085555/30513147-24ef89e0-9b39-11e7-8916-9101de7f2cb2.png]()
+
+9. Testcase & Fuzzer details
+
+   ![https://user-images.githubusercontent.com/14085555/30513148-24ef9ffc-9b39-11e7-8e75-e9e223de96c0.png]()
+
+10. Issue list
+
+    ![https://user-images.githubusercontent.com/14085555/30513150-24f368e4-9b39-11e7-886f-7fcafddd5b8b.png]()
+
+11. Issue Details
+
+    ![https://user-images.githubusercontent.com/14085555/30513149-24f31ce0-9b39-11e7-9351-faaa42d02533.png]()
+
+12. Statistics
+
+    ![https://user-images.githubusercontent.com/14085555/30513151-24f3c712-9b39-11e7-9b1a-5345faa7a86c.png]()
 
 
 
 ## Installation (Server)
 
-#### Easy Installation
+#### Easy Installation (Recommended, For linux)
 
 * Environment
   * Ubuntu 16.04.3 LTS (Server, Clean vm)
 
 1. Install Ubuntu.
 
-2. Download the installer and execute it.
+2. Download the installer
 
    ```sh
-   wget https://raw.githubusercontent.com/sweetchipsw/sweetmon/master/install.sh -O install.sh && bash install.sh
+   wget https://raw.githubusercontent.com/sweetchipsw/sweetmon/master/install.sh -O install.sh
    ```
 
-3. Done!
+3. Set '**DOMAIN**' on install.sh
+
+   ```sh
+   #!/bin/bash
+   # SWEETMON Installer
+   ###
+   # Modify under contents
+   ###
+   DOMAIN='' # domain.com || 192.168.123.123
+   EMAIL='admin@domain.com'
+   ```
+
+4. Run installer.
+
+   ```sh
+   bash install.sh
+   ```
+
+5. Done!
 
 
 
-#### Manual Installation
+#### Manual Installation (For linux)
 
 - Environment
   - Ubuntu 16.04.2 LTS (Server)
@@ -70,15 +131,30 @@ Sweetmon provides several useful things for monitoring fuzzers and crashes.
 
 2. Set virtualenv
 
-   1. Install && Activate virtualenv.
+   1. Update your server and Install dependencies
 
       ```sh
-      sudo apt-get install virtualenv
+      sudo apt update
+      sudo apt upgrade -y
+      sudo apt install -y python3 python3-pip apache2 virtualenv libapache2-mod-wsgi-py3 letsencrypt git
+      ```
+
+   2. Clone sweetmon project & Set env
+
+      ```sh
+      git clone https://github.com/sweetchipsw/sweetmon.git
+      export LOCATION=`pwd`
+      export VENV='sweetmon_venv'
+      ```
+
+   3. Install && Activate virtualenv.
+
+      ```sh
       virtualenv -p python3 sweetmon_venv
       . sweetmon_venv/bin/activate
       ```
 
-   2. Install django + dependencies.
+   4. Install django + dependencies.
 
       ```sh
       sudo pip3 install django
@@ -86,79 +162,119 @@ Sweetmon provides several useful things for monitoring fuzzers and crashes.
       sudo pip3 install pycrypto
       ```
 
-   3. Make configuration file
+   5. Make configuration file
 
       ```sh
       sudo vim /etc/apache2/sites-available/sweetmon.conf
       ```
 
-   4. Paste and modify under contents
+   6. Paste under contents.
 
       ```
       <VirtualHost *:80>
-          WSGIScriptAlias / /home/sweetchip/sweetmon/sweetmon/wsgi.py
-          WSGIDaemonProcess sweetmon python-path=/home/sweetchip/sweetmon/ python-home=/home/sweetchip/test_env/lib/python3.5/site-packages
+          WSGIScriptAlias / $LOCATION/sweetmon/sweetmon/wsgi.py
+          WSGIDaemonProcess sweetmon python-path=$LOCATION/sweetmon/ python-home=$LOCATION/$VENV/lib/python3.5/site-packages
           WSGIProcessGroup sweetmon
-          
-          ServerName dev.sweetchip.kr
-          ServerAlias dev.sweetchip.kr
-          ServerAdmin sweetchip@sweetchip.kr
 
-          DocumentRoot /home/sweetchip/sweetmon/
+          ServerName $DOMAIN
+          ServerAlias $DOMAIN
+          ServerAdmin $EMAIL
+
+          DocumentRoot $LOCATION/sweetmon/
 
           ErrorLog /var/log/apache2/sweetmon_error.log
           CustomLog /var/log/apache2/sweetmon_custom.log combined
 
-          Alias /robots.txt /home/sweetchip/sweetmon/static/robots.txt
-          Alias /assets/admin /home/sweetchip/test_env/lib/python3.5/site-packages/django/contrib/admin/static/admin
-          Alias /assets /home/sweetchip/sweetmon/static/
-          <Directory /home/sweetchip/sweetmon/>
+          Alias /robots.txt $LOCATION/sweetmon/static/robots.txt
+          Alias /assets/admin $LOCATION/$VENV/lib/python3.5/site-packages/django/contrib/admin/static/admin
+          Alias /assets $LOCATION/sweetmon/static/
+          <Directory $LOCATION/sweetmon/>
               Require all granted
           </Directory>
 
-          <Directory /home/sweetchip/sweetmon/sweetmon/ >
+          <Directory $LOCATION/sweetmon/sweetmon/ >
           <Files wsgi.py>
               Require all granted
           </Files>
           </Directory>
 
-          <Directory /home/sweetchip/test_env/lib/python3.5/site-packages/django/contrib/admin/static/admin/ >
+          <Directory $LOCATION/$VENV/lib/python3.5/site-packages/django/contrib/admin/static/admin/ >
               Require all granted
           </Directory>
       </VirtualHost>
       ```
+      ​
 
-   5. Restart apache2 server
+   7. Restart apache2 server
 
       ```sh
+      sudo a2ensite sweetmon
       sudo service apache2 restart
+
       ```
+      ​
 
-3. (Optional, but highly recommended) Apply SSL certificate.
-
-   1. Install Letsencrypt
+   8. Migrate DB / Set permission / Create super admin
 
       ```sh
-      sudo apt install letsencrypt
+      cd $LOCATION/sweetmon
+      python3 manage.py makemigrations
+      python3 manage.py migrate
+      sudo chown www-data:www-data ./ -R
+      python manage.py createsuperuser
       ```
 
-   2. a
+   9. Done.
 
-   3. a
+#### Install SSL server
 
-   4. a
+This is an optional, but highly recommended.
 
-   5. a
+1. Install Letsencrypt
 
-4. Generate superuser
+   ```sh
+   sudo apt install letsencrypt
+   ```
+   ​
+
+2. Check your port-forwarding status.
+
+   1. 80 (http)
+   2. 443 (https)
+
+   ​
+
+3. Generate SSL Certificate
+
+   ```sh
+   sudo letsencrypt certonly -a standalone -d domain.com
+   ```
+
+   ​
+
+4. Make configuration file for https.
+
+   ```
+
+   ```
+
+   ​
+
+5. Enable SSL & Restart apache2 server
+
+   ```sh
+
+   ```
+
+   ​
+
+6. Generate superuser
 
    ``` sh
    python manage.py createsuperuser
    ```
 
-5. Done!
 
-   1. Now you can use sweetmon-client.
 
 #### For windows, OS X
 
@@ -166,17 +282,36 @@ Sweetmon provides several useful things for monitoring fuzzers and crashes.
 
 
 
+
 ## After Install
 
-#### Change Secret key in settings.py
+#### 1. Change Secret key in settings.py (/sweetmon/settings.py)
+
+* To make your server secure, you should change SECRET_KEY.
+
+```python
+# SECURITY WARNING: keep the secret key used in production secret!
+# - Please Change this key before install on server.
+# SECRET_KEY = 'y3r$r7#g(g_6xt!q35ct=6sqt0kiihqe2vc#k%bktayz@vok2v'
+SECRET_KEY = '....'
+```
+
+* How to generate '**new**' SECRET_KEY
+
+```python
+import random
+''.join(random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50))
+
+#'(vj1g8ps3a7li%g%go6uno4!n(9dfegsj7mvbicy$vv&c#!ak4'
+```
 
 
 
+#### 2. You should use sweetmon-client to interact with sweetmon
+
+- Check https://github.com/sweetchipsw/sweetmon_client
 
 
-# WIKI
-
-Please check [this] page.
 
 # PS
 
