@@ -151,9 +151,7 @@ Sweetmon provides several useful things for monitoring fuzzers and crashes.
 5. Install django + dependencies.
 
    ```sh
-   sudo pip3 install django
-   sudo pip3 install requests
-   sudo pip3 install pycrypto
+   sudo pip3 install -r requirements.txt
    ```
 
 6. Make configuration file
