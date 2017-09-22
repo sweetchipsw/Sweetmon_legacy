@@ -72,7 +72,7 @@ class Crash(models.Model):
 
 	title = models.CharField(max_length=1000)
 	crash_hash = models.CharField(max_length=100)
-	crashlog = models.CharField(max_length=65535)
+	crashlog = models.TextField()
 	dup_crash = models.IntegerField(default=0)
 	crash_file = models.FileField(storage=private_storage, upload_to=getUploadPath)
 	reg_date = models.DateTimeField(default=datetime.now, blank=True)  # first date
