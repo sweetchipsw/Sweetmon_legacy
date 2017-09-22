@@ -77,7 +77,7 @@ class Crash(models.Model):
 	crash_file = models.FileField(storage=private_storage, upload_to=getUploadPath)
 	reg_date = models.DateTimeField(default=datetime.now, blank=True)  # first date
 	latest_date = models.DateTimeField(auto_now=True)
-	comment = models.CharField(max_length=100000, null=True, blank=True)
+	comment = models.TextField(null=True, blank=True)
 	is_encrypted = models.BooleanField(default=False)
 
 	def __str__(obj):
