@@ -169,7 +169,7 @@ class Profile(models.Model):
 	use_email_alert = models.BooleanField(default=False,
 	                                      help_text="You should fill out email of your profile to use this feature.")
 
-	userkey = models.TextField(null=True, blank=True, help_text="Use this key when you regist the new fuzzer.")
+	userkey = models.TextField(null=True, blank=True, help_text="Use this key when you register the new fuzzer.")
 
 	def __str__(obj):
 		return "%s" % (obj.owner)
