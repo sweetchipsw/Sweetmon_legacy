@@ -72,12 +72,12 @@ class Crash(models.Model):
 
 	title = models.CharField(max_length=1000)
 	crash_hash = models.CharField(max_length=100)
-	crashlog = models.CharField(max_length=6553500)
+	crashlog = models.TextField()
 	dup_crash = models.IntegerField(default=0)
 	crash_file = models.FileField(storage=private_storage, upload_to=getUploadPath)
 	reg_date = models.DateTimeField(default=datetime.now, blank=True)  # first date
 	latest_date = models.DateTimeField(auto_now=True)
-	comment = models.CharField(max_length=100000, null=True, blank=True)
+	comment = models.TextField(null=True, blank=True)
 	is_encrypted = models.BooleanField(default=False)
 
 	def __str__(obj):
@@ -169,7 +169,7 @@ class Profile(models.Model):
 	use_email_alert = models.BooleanField(default=False,
 	                                      help_text="You should fill out email of your profile to use this feature.")
 
-	userkey = models.TextField(null=True, blank=True, help_text="Use this key when you regist the new fuzzer.")
+	userkey = models.TextField(null=True, blank=True, help_text="Use this key when you register the new fuzzer.")
 
 	def __str__(obj):
 		return "%s" % (obj.owner)

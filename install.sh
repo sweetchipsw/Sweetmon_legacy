@@ -40,10 +40,7 @@ PYTHON3=$LOCATION/$VENV/bin/python3
 
 # Install dependencies for sweetmon
 echo "[*] Install essential packages."
-sudo $PIP3 install django
-sudo $PIP3 install requests
-sudo $PIP3 install pycrypto
-
+$PIP3 install -r requirements.txt
 
 echo "[*] Generate apache2 settings."
 cat > /tmp/sweetmon_temp.conf <<EOF
